@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adelfos Capital | Coming Soon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;1,300&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <canvas id="engineCanvas"></canvas>
+    <header class="logo-container">
+        <div class="logo">
+            <span class="bold">Adelfos</span><span class="thin">Capital</span>
+        </div>
+    </header>
+
+    <main class="content hero-section" id="heroSection" data-engine="hero">
+        <h1 class="coming-soon">Coming in October 11th 2028 15:00 UTC</h1>
+        <div id="countdown" class="countdown">
+            <div class="countdown-item" style="--delay: 0.1s"><span id="years">00</span><label>Years</label></div>
+            <div class="countdown-item" style="--delay: 0.2s"><span id="months">00</span><label>Months</label></div>
+            <div class="countdown-item" style="--delay: 0.3s"><span id="days">00</span><label>Days</label></div>
+            <div class="countdown-item" style="--delay: 0.4s"><span id="hours">00</span><label>Hours</label></div>
+            <div class="countdown-item little" style="--delay: 0.5s"><span id="minutes">00</span><label>Minutes</label>
+            </div>
+            <div class="countdown-item smaller" style="--delay: 0.6s"><span id="seconds">00</span><label>Seconds</label>
+            </div>
+        </div>
+
+        <div class="calendar-actions">
+            <a id="btn-google" href="#" class="calendar-btn" style="--delay: 0.7s" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg"
+                    alt="Google Calendar" width="20" height="20" style="vertical-align: middle;">
+                <span style="margin-left: 8px;">Don't miss it</span>
+            </a>
+        </div>
+
+        <div class="scroll-indicator" id="scrollIndicator">
+            <span>Scroll to explore</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M7 13l5 5 5-5M7 6l5 5 5-5" />
+            </svg>
+        </div>
+    </main>
+
+    <section class="info-section" id="infoSection">
+        <div class="info-content">
+            <h2>The Terminal.</h2>
+            <p>Adelfos Capital is a private ecosystem for high-fidelity market simulation. We bridge the gap between
+                pure visualization and quantitative reality. No noise. No distractions.</p>
+            <p><span class="highlight">Stochastic Architecture.</span> Four proprietary engines operationalized for deep
+                liquidity navigation: <span class="highlight">Hermes. Kronos. Afrodita. Tartaros.</span></p>
+            <p>Institutional-grade stress testing and Monte Carlo simulations, contained within a single minimalist
+                interface. Designed for the few who understand that price is a result, not a starting point.</p>
+            <p>October 11th, 2028. The calculation is already running.</p>
+        </div>
+        <div class="info-media">
+            <img src="intro.jpeg" alt="Adelfos Terminal Intro" class="intro-image">
+        </div>
+        
+        <!-- Scroll hint indicator -->
+        <div class="section-scroll-hint">
+            <div class="arrow-down"></div>
+        </div>
+    </section>
+
+        <div class="model-slide" data-engine="hermes">
+            <div class="model-info">
+                <span class="model-label">Engine v2.1</span>
+                <h3>Hermes</h3>
+                <p>Swift messenger of the void, traversing realms in a heartbeat. Hermes maps 50,000 instant paths to find the escape route through the chaos of 0-1DTE exposure.</p>
+            </div>
+            <div class="model-math">
+                <img src="https://latex.codecogs.com/svg.image?\color{White}\Huge\begin{cases}dS_{t}=\mu%20S_{t}dt+\sqrt{V_{t}}S_{t}dW_{t}^{S}+S_{t}dJ_{t}\\%20dV_{t}=\kappa(\theta-V_{t})dt+\sigma\sqrt{V_{t}}dW_{t}^{V}\end{cases}" alt="Hermes Formula">
+            </div>
+        </div>
+        
+        <div class="model-slide" data-engine="kronos">
+            <div class="model-info">
+                <span class="model-label">Engine v2.4</span>
+                <h3>Kronos</h3>
+                <p>Architect of the temporal flow and devourer of all noise. Kronos identifies the hidden cycles of the market, navigating structural shifts between order and inevitable collapse.</p>
+            </div>
+            <div class="model-math">
+                <img src="https://latex.codecogs.com/svg.image?\color{White}\Huge\mathcal{L}(\theta)=\log\sum_{S_{1:T}}\left(\pi_{S_{1}}\prod_{t=2}^{T}a_{S_{t-1}S_{t}}\prod_{t=1}^{T}f(x_{t}|S_{t})\right)" alt="Kronos Formula">
+            </div>
+        </div>
+
+        <div class="model-slide" data-engine="afrodita">
+            <div class="model-info">
+                <span class="model-label">Engine v1.9</span>
+                <h3>Afrodita</h3>
+                <p>Born from the foam of volatility, the bridge between open and close. Afrodita weaves a stochastic trajectory of mathematical elegance to reconstruct the invisible path of price.</p>
+            </div>
+            <div class="model-math">
+                <img src="https://latex.codecogs.com/svg.image?\color{White}\Huge%20P(x,T|y,t)=\int_{y}^{x}\mathcal{D}[q]\exp\left(-\frac{1}{2\sigma^{2}}\int_{t}^{T}\dot{q}^{2}(\tau)d\tau\right)" alt="Afrodita Formula">
+            </div>
+        </div>
+
+        <div class="model-slide" data-engine="tartaros">
+            <div class="model-info">
+                <span class="model-label">Engine v3.0</span>
+                <h3>Tartaros</h3>
+                <p>The deepest abyss where shadows test the gods. Tartaros subjects your portfolio to the crushing pressure of black swans, forging invincibility against irrational panic.</p>
+            </div>
+            <div class="model-math">
+                <img src="https://latex.codecogs.com/svg.image?\color{White}\Huge\min_{w\in\mathcal{W}}\max_{\Delta\in\mathcal{U}}\left(\zeta+\frac{1}{1-\alpha}\mathbb{E}[f(w,S+\Delta)-\zeta]^{+}\right)" alt="Tartaros Formula">
+            </div>
+        </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
