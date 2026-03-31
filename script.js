@@ -1,4 +1,111 @@
 // Adelfos Capital - Landing Page Logic
+const translations = {
+    es: {
+        "launch-label": "v1.0 LANZAMIENTO GLOBAL",
+        "coming-soon": "11 de Octubre 2028 15:00 UTC",
+        "years-label": "Años",
+        "months-label": "Meses",
+        "days-label": "Días",
+        "hours-label": "Horas",
+        "minutes-label": "Minutos",
+        "seconds-label": "Segundos",
+        "email-placeholder": "Correo Corporativo",
+        "reason-placeholder": "Describe tu caso de uso institucional...",
+        "request-access": "SOLICITAR ACCESO",
+        "waitlist-hint": "Plazas Alpha reservadas para miembros tempranos. <a id=\"btn-google\" href=\"#\" class=\"calendar-link\" target=\"_blank\">Añadir al Calendario</a>.",
+        "scroll-explore": "Desliza para explorar",
+        "terminal-h2": "El Terminal.",
+        "terminal-p1": "Adelfos Capital es un ecosistema privado para simulación de mercado de alta fidelidad. Cerramos la brecha entre visualización y realidad cuantitativa. Sin ruido. Sin distracciones.",
+        "stochastic-arch": "Arquitectura Estocástica.",
+        "engines-list": "Cuatro motores propietarios: Hermes. Kronos. Afrodita. Tartaros.",
+        "terminal-p3": "Pruebas de estrés institucionales y simulaciones Monte Carlo en una interfaz minimalista. Para los pocos que entienden que el precio es un resultado, no el inicio.",
+        "terminal-p4": "11 de Octubre, 2028. El cálculo ya ha comenzado.",
+        "capabilities-label": "CAPACIDADES DEL TERMINAL",
+        "capabilities-h2": "Once Módulos.<br>Una Interfaz.",
+        "capabilities-p": "Cada dimensión del mercado, destilada en un lienzo oscuro. Sin funciones innecesarias. Cada módulo se gana su lugar.",
+        "markets-h4": "Mercados",
+        "markets-p": "Watchlist en tiempo real con cotizaciones, volumen y cambios. Índices, acciones, cripto y forex en un panel monocromo.",
+        "chart-h4": "Gráficos+",
+        "chart-p": "Velas avanzadas con Plotly. Indicadores técnicos (SMA, RSI, MACD) y capas de grado institucional.",
+        "supply-h4": "Suministro",
+        "supply-p": "Inteligencia de cadena de suministro vía SEC EDGAR y yFinance. Mapea proveedores y dependencias en tiempo real.",
+        "flights-h4": "Vuelos",
+        "flights-p": "Seguimiento global vía OpenSky. Monitoriza rutas de carga y movimientos de jets vinculados a macro-eventos.",
+        "tankers-h4": "Barcos",
+        "tankers-p": "Rastreo marítimo AISStream. Sigue barcos de crudo y rutas VLCC para anticipar señales de suministro energético.",
+        "crisis-h4": "Mapa de Crisis",
+        "crisis-p": "Mapa térmico de riesgo geopolítico. Conflictos, sanciones e inestabilidad en una capa de evaluación de amenazas.",
+        "sim-h4": "Simulación",
+        "sim-p": "Motores estocásticos — Hermes, Kronos, Afrodita, Tartaros — con 50k rutas Monte Carlo y detección de régimen.",
+        "port-h4": "Cartera",
+        "port-p": "Vista unificada con retornos, volatilidad y Sharpe. Rastrea posiciones y P&L en todas las clases de activos.",
+        "fund-h4": "Fundamentales",
+        "fund-p": "Análisis profundo: múltiplos, rentabilidad, sector y descripciones completas de negocios al instante.",
+        "alerts-h4": "Alertas",
+        "alerts-p": "Alertas condicionales con umbrales. Etiquetas personalizadas y monitoreo de múltiples tickers.",
+        "paper-h4": "Paper Trading",
+        "paper-p": "Simulación sin riesgo con $100K virtuales. Ejecuta órdenes y valida estrategias antes de operar real.",
+        "arch-label": "ARQUITECTURA DE SIMULACIÓN",
+        "arch-h2": "Los Cuatro Motores.",
+        "hermes-p": "Mensajero veloz del vacío. Hermes mapea 50,000 rutas para encontrar la salida al caos de la exposición 0-1DTE.",
+        "kronos-h3": "Cronos",
+        "kronos-p": "Arquitecto del flujo temporal. Identifica ciclos ocultos, navegando cambios entre el orden y el colapso.",
+        "afrodita-p": "Nacida de la espuma de la volatilidad. Teje trayectorias de elegancia matemática para el camino invisible del precio.",
+        "tartaros-p": "El abismo para probar a los dioses. Somete tu cartera a la presión de los cisnes negros contra el pánico irracional.",
+        "footer-h2": "El cálculo está en marcha.",
+        "footer-p": "Solo 50 llaves alpha se acuñarán antes del lanzamiento global v1.0.",
+        "secure-btn": "ASEGURA TU TERMINAL",
+        "footer-sig": "DE GEEK A QUANT. 2028.",
+        "apply-state": "SOLICITANDO...",
+        "submit-app": "ENVIAR SOLICITUD",
+        "success-state": "ACCESO ASEGURADO",
+        "error-state": "ERROR - REINTENTAR",
+        "hint-success": "Solicitud recibida de forma segura. Se le notificará por correo electrónico.",
+        "nav-launch": "Lanzamiento",
+        "nav-vision": "Visión",
+        "nav-modules": "Módulos",
+        "nav-hermes": "Hermes",
+        "nav-kronos": "Cronos",
+        "nav-afrodita": "Afrodita",
+        "nav-tartaros": "Tártaros"
+    }
+};
+
+let currentLang = 'en';
+
+function initI18n() {
+    const userLang = navigator.language || navigator.userLanguage;
+    if (userLang.startsWith('es')) {
+        currentLang = 'es';
+        document.documentElement.lang = 'es';
+        applyTranslations('es');
+    }
+}
+
+function applyTranslations(lang) {
+    if (!translations[lang]) return;
+    const t = translations[lang];
+    
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) {
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                el.placeholder = t[key];
+            } else {
+                el.innerHTML = t[key];
+            }
+        }
+    });
+
+    // Handle side nav labels specifically if they are in data-label
+    document.querySelectorAll('.nav-dot').forEach(dot => {
+        const key = dot.getAttribute('data-i18n-label');
+        if (key && t[key]) {
+            dot.setAttribute('data-label', t[key]);
+        }
+    });
+}
+
 const targetDate = new Date('2028-10-11T15:00:00Z');
 
 function updateCountdown() {
@@ -469,7 +576,7 @@ function setupScrollEffects() {
                         // Force a tiny delay so the browser paints the initial small textarea frame before expanding
                         setTimeout(() => {
                             waitlistForm.classList.add('expanded-pill');
-                            btnSpan.innerText = "SUBMIT APPLICATION";
+                            btnSpan.innerText = currentLang === 'es' ? translations.es["submit-app"] : "SUBMIT APPLICATION";
                             waitlistReason.style.opacity = '1';
                             waitlistSubmitBtn.style.opacity = '1';
                             waitlistSubmitBtn.style.pointerEvents = "auto";
@@ -481,7 +588,7 @@ function setupScrollEffects() {
             } else if (currentStep === 2) {
                 if (waitlistReason && waitlistReason.value) {
                     const originalText = btnSpan.innerText;
-                    btnSpan.innerText = "PROCESSING...";
+                    btnSpan.innerText = currentLang === 'es' ? translations.es["apply-state"] : "PROCESSING...";
                     waitlistSubmitBtn.style.pointerEvents = "none";
                     waitlistSubmitBtn.style.opacity = "0.7";
                     
@@ -493,18 +600,18 @@ function setupScrollEffects() {
                             source: 'landing_page'
                         });
 
-                        btnSpan.innerText = "ACCESS SECURED";
+                        btnSpan.innerText = currentLang === 'es' ? translations.es["success-state"] : "ACCESS SECURED";
                         waitlistSubmitBtn.style.opacity = "1";
                         waitlistSubmitBtn.classList.add('success');
 
                         const hintDiv = document.querySelector('.waitlist-hint');
                         if (hintDiv) {
-                            hintDiv.innerHTML = "Application received securely. You will be notified via email.";
+                            hintDiv.innerHTML = currentLang === 'es' ? translations.es["hint-success"] : "Application received securely. You will be notified via email.";
                             hintDiv.style.color = "#cccccc";
                         }
                     } catch (error) {
                         console.error("Firebase Error:", error);
-                        btnSpan.innerText = "ERROR - TRY AGAIN";
+                        btnSpan.innerText = currentLang === 'es' ? translations.es["error-state"] : "ERROR - TRY AGAIN";
                         waitlistSubmitBtn.style.pointerEvents = "auto";
                         waitlistSubmitBtn.style.opacity = "1";
                         
@@ -883,6 +990,9 @@ class FeatureAnimations {
 // Update every second to show seconds counting down
 setInterval(updateCountdown, 1000);
 document.addEventListener('DOMContentLoaded', () => {
+    // Localization init
+    initI18n();
+
     updateCountdown();
     setupCalendarButtons();
     setupScrollEffects();
