@@ -890,5 +890,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize feature card canvas animations
     const featureAnims = new FeatureAnimations();
     featureAnims.init();
+
+    // Footer CTA Scroll Logic
+    const footerWaitlistBtn = document.getElementById('footerWaitlistBtn');
+    if (footerWaitlistBtn) {
+        footerWaitlistBtn.addEventListener('click', () => {
+            const hero = document.getElementById('heroSection');
+            if (hero) {
+                hero.scrollIntoView({ behavior: 'smooth' });
+                // Auto-focus email field after arrival
+                setTimeout(() => {
+                    const emailInput = document.getElementById('waitlistEmail');
+                    if (emailInput) emailInput.focus();
+                }, 800);
+            }
+        });
+    }
 });
 

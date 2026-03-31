@@ -59,8 +59,26 @@ body {
 .logo {
     display: flex;
     align-items: center;
-    font-size: 1.5rem;
+    gap: 0.6rem;
+    font-size: 1.3rem;
     letter-spacing: -0.02em;
+}
+
+.logo-alpha {
+    font-family: 'Crimson Pro', serif;
+    font-size: 2.3rem;
+    font-style: italic;
+    font-weight: 300;
+    color: #fff;
+    line-height: 1;
+    margin-top: -6px; 
+    opacity: 0.95;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.logo-text {
+    display: flex;
+    align-items: center;
 }
 
 .logo .bold {
@@ -71,10 +89,9 @@ body {
 .logo .thin {
     font-weight: 300;
     color: var(--logo-gray);
-    margin-left: -0.1rem;
-    /* Closer letter spacing */
-    /* Add a subtle chromatic text-shadow for premium feel */
-    text-shadow: 1px 1px 0px rgba(0, 255, 255, 0.1), -1px -1px 0px rgba(255, 0, 255, 0.1);
+    margin-left: 0.1rem;
+    /* Clean, close spacing */
+    text-shadow: 1px 1px 0px rgba(0, 255, 254, 0.05), -1px -1px 0px rgba(255, 0, 255, 0.05);
 }
 
 .content {
@@ -1080,5 +1097,67 @@ body {
     }
     .engines-header {
         padding: 0 1.5rem;
+    }
+}
+
+.main-footer {
+    padding: 8rem 2rem 5rem;
+    background: #000;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    color: #888;
+    font-size: 0.8rem;
+    font-family: var(--font-main);
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 3rem;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.footer-logo .logo-alpha {
+    font-size: 1.6rem;
+    margin-top: -4px;
+}
+
+.footer-links {
+    display: flex;
+    gap: 2.5rem;
+}
+
+.footer-links a {
+    color: #666;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+}
+
+.footer-links a:hover {
+    color: #fff;
+}
+
+.footer-copyright {
+    opacity: 0.4;
+    letter-spacing: 0.02em;
+}
+
+@media (max-width: 768px) {
+    .main-footer .footer-content {
+        flex-direction: column;
+        text-align: center;
     }
 }
