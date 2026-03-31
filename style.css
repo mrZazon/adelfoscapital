@@ -545,7 +545,7 @@ body {
 
 .waitlist-form {
     display: flex;
-    align-items: stretch;
+    align-items: center;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 50px;
@@ -554,7 +554,12 @@ body {
     min-width: 350px;
     max-width: 550px;
     backdrop-filter: blur(10px);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-radius 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.waitlist-form.expanded-pill {
+    border-radius: 20px;
+    align-items: flex-end;
 }
 
 .waitlist-form:focus-within {
@@ -582,7 +587,29 @@ body {
     transition: opacity 0.3s ease;
 }
 
-.waitlist-input::placeholder {
+.waitlist-reason-area {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #fff;
+    padding: 0.8rem 0.5rem;
+    font-family: var(--font-main);
+    font-size: 0.95rem;
+    outline: none;
+    resize: none;
+    height: 45px;
+    overflow: hidden;
+    line-height: 1.5;
+    transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+.waitlist-form.expanded-pill .waitlist-reason-area {
+    height: 100px;
+    overflow-y: auto;
+}
+
+.waitlist-input::placeholder,
+.waitlist-reason-area::placeholder {
     color: rgba(255, 255, 255, 0.3);
 }
 

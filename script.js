@@ -467,6 +467,7 @@ function setupScrollEffects() {
                         waitlistReason.style.display = 'block';
                         void waitlistReason.offsetWidth; // Force reflow
 
+                        waitlistForm.classList.add('expanded-pill'); // Expand pill
                         btnSpan.innerText = "SUBMIT APPLICATION";
                         waitlistReason.style.opacity = '1';
                         waitlistSubmitBtn.style.opacity = '1';
