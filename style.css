@@ -554,7 +554,7 @@ body {
     min-width: 350px;
     max-width: 550px;
     backdrop-filter: blur(10px);
-    transition: border-radius 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .waitlist-form.expanded-pill {

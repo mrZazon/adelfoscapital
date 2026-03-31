@@ -465,15 +465,17 @@ function setupScrollEffects() {
                     setTimeout(() => {
                         waitlistEmail.style.display = 'none';
                         waitlistReason.style.display = 'block';
-                        void waitlistReason.offsetWidth; // Force reflow
-
-                        waitlistForm.classList.add('expanded-pill'); // Expand pill
-                        btnSpan.innerText = "SUBMIT APPLICATION";
-                        waitlistReason.style.opacity = '1';
-                        waitlistSubmitBtn.style.opacity = '1';
-                        waitlistSubmitBtn.style.pointerEvents = "auto";
-                        waitlistReason.required = true;
-                        waitlistReason.focus();
+                        
+                        // Force a tiny delay so the browser paints the initial small textarea frame before expanding
+                        setTimeout(() => {
+                            waitlistForm.classList.add('expanded-pill');
+                            btnSpan.innerText = "SUBMIT APPLICATION";
+                            waitlistReason.style.opacity = '1';
+                            waitlistSubmitBtn.style.opacity = '1';
+                            waitlistSubmitBtn.style.pointerEvents = "auto";
+                            waitlistReason.required = true;
+                            waitlistReason.focus();
+                        }, 50);
                     }, 300);
                 }
             } else if (currentStep === 2) {
