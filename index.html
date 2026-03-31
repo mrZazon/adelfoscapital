@@ -12,6 +12,22 @@
 </head>
 
 <body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress-container">
+        <div class="scroll-progress-bar" id="scrollProgress"></div>
+    </div>
+
+    <!-- Side Navigation -->
+    <nav class="side-nav" id="sideNav">
+        <div class="nav-dot active" data-target="heroSection" data-label="Launch"></div>
+        <div class="nav-dot" data-target="infoSection" data-label="Vision"></div>
+        <div class="nav-dot" data-target="featuresSection" data-label="Modules"></div>
+        <div class="nav-dot" data-target="engine-hermes" data-label="Hermes"></div>
+        <div class="nav-dot" data-target="engine-kronos" data-label="Kronos"></div>
+        <div class="nav-dot" data-target="engine-afrodita" data-label="Afrodita"></div>
+        <div class="nav-dot" data-target="engine-tartaros" data-label="Tartaros"></div>
+    </nav>
+
     <canvas id="engineCanvas"></canvas>
     <header class="logo-container">
         <div class="logo">
@@ -19,8 +35,9 @@
         </div>
     </header>
 
-    <main class="content hero-section" id="heroSection" data-engine="hero">
-        <h1 class="coming-soon">Coming in October 11th 2028 15:00 UTC</h1>
+    <main class="content hero-section" id="heroSection">
+        <span class="launch-label" style="--delay: 0.0s">v1.0 GLOBAL RELEASE</span>
+        <h1 class="coming-soon">October 11th 2028 15:00 UTC</h1>
         <div id="countdown" class="countdown">
             <div class="countdown-item" style="--delay: 0.1s"><span id="years">00</span><label>Years</label></div>
             <div class="countdown-item" style="--delay: 0.2s"><span id="months">00</span><label>Months</label></div>
@@ -32,12 +49,15 @@
             </div>
         </div>
 
-        <div class="calendar-actions">
-            <a id="btn-google" href="#" class="calendar-btn" style="--delay: 0.7s" target="_blank">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg"
-                    alt="Google Calendar" width="20" height="20" style="vertical-align: middle;">
-                <span style="margin-left: 8px;">Don't miss it</span>
-            </a>
+        <div class="waitlist-container" style="--delay: 0.7s">
+            <form id="waitlistForm" class="waitlist-form">
+                <input type="email" id="waitlistEmail" class="waitlist-input" placeholder="Corporate Email Address" required>
+                <button type="submit" id="waitlistSubmitBtn" class="waitlist-btn">
+                    <span>REQUEST ACCESS</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+                </button>
+            </form>
+            <p class="waitlist-hint">Alpha slots reserved for early waitlist members. <a id="btn-google" href="#" class="calendar-link" target="_blank">Add v1.0 launch to Calendar</a>.</p>
         </div>
 
         <div class="scroll-indicator" id="scrollIndicator">
@@ -70,7 +90,129 @@
         </div>
     </section>
 
-        <div class="model-slide" data-engine="hermes">
+    <!-- Terminal Features Section -->
+    <section class="features-section" id="featuresSection">
+        <div class="features-header">
+            <span class="features-label">TERMINAL CAPABILITIES</span>
+            <h2>Eleven Modules.<br>One Interface.</h2>
+            <p class="features-subtitle">Every dimension of the market, distilled into a single dark canvas. No tabs wasted. No feature bloat. Each module exists because it earns its place.</p>
+        </div>
+
+        <div class="features-grid">
+            <!-- Markets -->
+            <div class="feature-card" style="--card-delay: 0s">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+                </div>
+                <h4>Markets</h4>
+                <p>Real-time watchlist with live quotes, volume, and change data. Global indices, equities, crypto, forex, and commodities on a single monochrome dashboard.</p>
+            </div>
+
+            <!-- Chart+ -->
+            <div class="feature-card" style="--card-delay: 0.05s">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v-5.5m0 5.5l3-3m0 0l3 3m-3-3v8"/></svg>
+                </div>
+                <h4>Chart+</h4>
+                <p>Advanced candlestick charting powered by Plotly. Multiple timeframes, technical indicators (SMA, EMA, Bollinger, RSI, MACD), and institutional-grade overlays.</p>
+            </div>
+
+            <!-- Supply Chain -->
+            <div class="feature-card" style="--card-delay: 0.1s">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"/></svg>
+                </div>
+                <h4>Supply Chain</h4>
+                <p>Live supply chain intelligence sourced from SEC EDGAR XBRL filings and yFinance. Maps suppliers, customers, and sector dependencies in real time.</p>
+            </div>
+
+            <!-- Flights -->
+            <div class="feature-card" style="--card-delay: 0.15s">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
+                </div>
+                <h4>Flights</h4>
+                <p>Global flight tracking overlay via OpenSky Network. Monitor cargo routes, executive jet movements, and aviation logistics tied to macro events.</p>
+            </div>
+
+            <!-- Oil Tankers -->
+            <div class="feature-card" style="--card-delay: 0.2s">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg>
+                </div>
+                <h4>Oil Tankers</h4>
+                <p>AIS maritime vessel tracking via AISStream. Follow crude oil tanker movements, VLCC routes, and floating storage to front-run energy supply signals.</p>
+            </div>
+
+            <!-- Crisis Map -->
+            <div class="feature-card" style="--card-delay: 0.25s">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+                </div>
+                <h4>Crisis Map</h4>
+                <p>Geopolitical risk heatmap. Aggregates global conflict, sanctions, natural disasters, and political instability into a single threat-assessment overlay.</p>
+            </div>
+
+            <!-- Simulation -->
+            <div class="feature-card featured" style="--card-delay: 0.3s">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg>
+                </div>
+                <h4>Simulation</h4>
+                <p>Four proprietary stochastic engines — Hermes, Kronos, Afrodita, Tartaros — running 50,000-path Monte Carlo simulations, regime detection, and stress testing.</p>
+            </div>
+
+            <!-- Portfolio -->
+            <div class="feature-card" style="--card-delay: 0.35s">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/></svg>
+                </div>
+                <h4>Portfolio</h4>
+                <p>Unified portfolio view with annualized returns, volatility, and Sharpe ratio. Track positions, market value, and unrealized P&L across all asset classes.</p>
+            </div>
+
+            <!-- Fundamentals -->
+            <div class="feature-card" style="--card-delay: 0.4s">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                </div>
+                <h4>Fundamentals</h4>
+                <p>Deep-dive company analysis. Valuation multiples, profitability metrics, sector classification, employee count, and full business descriptions at a glance.</p>
+            </div>
+
+            <!-- Alerts -->
+            <div class="feature-card" style="--card-delay: 0.45s">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+                </div>
+                <h4>Alerts</h4>
+                <p>Conditional price alerts with above/below thresholds. Set custom labels, monitor multiple tickers, and never miss a critical level break again.</p>
+            </div>
+
+            <!-- Paper Trading -->
+            <div class="feature-card" style="--card-delay: 0.5s">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <h4>Paper Trading</h4>
+                <p>Risk-free simulated trading with $100K virtual capital. Execute market and limit orders, track positions, and validate strategies before committing real capital.</p>
+            </div>
+        </div>
+
+        <!-- Scroll hint indicator -->
+        <div class="section-scroll-hint" style="position: relative; margin-top: 5rem; bottom: auto; padding-bottom: 2rem;">
+            <div class="arrow-down"></div>
+        </div>
+    </section>
+
+    <!-- Simulation Engines Section -->
+    <section class="engines-section" id="enginesSection">
+        <div class="engines-header">
+            <span class="engines-label">SIMULATION ARCHITECTURE</span>
+            <h2>The Four Engines.</h2>
+        </div>
+
+        <div class="model-slide" data-engine="hermes" id="engine-hermes">
             <div class="model-info">
                 <span class="model-label">Engine v2.1</span>
                 <h3>Hermes</h3>
@@ -79,9 +221,13 @@
             <div class="model-math">
                 <img src="https://latex.codecogs.com/svg.image?\color{White}\Huge\begin{cases}dS_{t}=\mu%20S_{t}dt+\sqrt{V_{t}}S_{t}dW_{t}^{S}+S_{t}dJ_{t}\\%20dV_{t}=\kappa(\theta-V_{t})dt+\sigma\sqrt{V_{t}}dW_{t}^{V}\end{cases}" alt="Hermes Formula">
             </div>
+            
+            <div class="slide-scroll-hint" data-target="engine-kronos">
+                <div class="arrow-down-small"></div>
+            </div>
         </div>
         
-        <div class="model-slide" data-engine="kronos">
+        <div class="model-slide" data-engine="kronos" id="engine-kronos">
             <div class="model-info">
                 <span class="model-label">Engine v2.4</span>
                 <h3>Kronos</h3>
@@ -90,9 +236,13 @@
             <div class="model-math">
                 <img src="https://latex.codecogs.com/svg.image?\color{White}\Huge\mathcal{L}(\theta)=\log\sum_{S_{1:T}}\left(\pi_{S_{1}}\prod_{t=2}^{T}a_{S_{t-1}S_{t}}\prod_{t=1}^{T}f(x_{t}|S_{t})\right)" alt="Kronos Formula">
             </div>
+            
+            <div class="slide-scroll-hint" data-target="engine-afrodita">
+                <div class="arrow-down-small"></div>
+            </div>
         </div>
 
-        <div class="model-slide" data-engine="afrodita">
+        <div class="model-slide" data-engine="afrodita" id="engine-afrodita">
             <div class="model-info">
                 <span class="model-label">Engine v1.9</span>
                 <h3>Afrodita</h3>
@@ -101,9 +251,13 @@
             <div class="model-math">
                 <img src="https://latex.codecogs.com/svg.image?\color{White}\Huge%20P(x,T|y,t)=\int_{y}^{x}\mathcal{D}[q]\exp\left(-\frac{1}{2\sigma^{2}}\int_{t}^{T}\dot{q}^{2}(\tau)d\tau\right)" alt="Afrodita Formula">
             </div>
+            
+            <div class="slide-scroll-hint" data-target="engine-tartaros">
+                <div class="arrow-down-small"></div>
+            </div>
         </div>
 
-        <div class="model-slide" data-engine="tartaros">
+        <div class="model-slide" data-engine="tartaros" id="engine-tartaros">
             <div class="model-info">
                 <span class="model-label">Engine v3.0</span>
                 <h3>Tartaros</h3>
@@ -113,8 +267,21 @@
                 <img src="https://latex.codecogs.com/svg.image?\color{White}\Huge\min_{w\in\mathcal{W}}\max_{\Delta\in\mathcal{U}}\left(\zeta+\frac{1}{1-\alpha}\mathbb{E}[f(w,S+\Delta)-\zeta]^{+}\right)" alt="Tartaros Formula">
             </div>
         </div>
+    </section>
 
-    <script src="script.js"></script>
+    <!-- Footer CTA Section -->
+    <section class="footer-cta" id="footerCTA">
+        <h2>The calculation is running.</h2>
+        <p>Only fifty alpha terminal keys will be minted before the global v1.0 release.</p>
+        <button class="waitlist-btn large" id="footerWaitlistBtn">
+            <span>SECURE YOUR TERMINAL</span>
+        </button>
+    </section>
+
+    <!-- Firebase SDK (Compat Version for Vanilla JS) -->
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
+    <script type="module" src="/script.js"></script>
 </body>
 
 </html>
