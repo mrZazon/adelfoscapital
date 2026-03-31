@@ -446,44 +446,71 @@ function setupScrollEffects() {
         db = firebase.firestore();
     }
 
+    let currentStep = 1;
+
     if (waitlistForm && db) {
         waitlistForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (waitlistEmail && waitlistEmail.value) {
-                const btnSpan = waitlistSubmitBtn.querySelector('span');
-                const originalText = btnSpan.innerText;
-                btnSpan.innerText = "PROCESSING...";
-                waitlistSubmitBtn.style.pointerEvents = "none";
-                waitlistSubmitBtn.style.opacity = "0.7";
-                
-                try {
-                    await db.collection("waitlist").add({
-                        email: waitlistEmail.value.trim(),
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                        source: 'landing_page'
-                    });
+            
+            const waitlistReason = document.getElementById('waitlistReason');
+            const btnSpan = waitlistSubmitBtn.querySelector('span');
 
-                    btnSpan.innerText = "ACCESS REQUESTED";
-                    waitlistSubmitBtn.style.opacity = "1";
-                    waitlistSubmitBtn.classList.add('success');
+            if (currentStep === 1) {
+                if (waitlistEmail && waitlistEmail.value) {
+                    currentStep = 2;
+                    waitlistEmail.style.opacity = '0';
+                    waitlistSubmitBtn.style.opacity = '0';
+                    waitlistSubmitBtn.style.pointerEvents = "none";
 
-                    const hintDiv = document.querySelector('.waitlist-hint');
-                    if (hintDiv) {
-                        hintDiv.innerHTML = "Access requested securely. You will receive an email when the alpha terminal is deployed.";
-                        hintDiv.style.color = "#cccccc";
-                    }
-                    waitlistEmail.value = ""; // clear input
-                } catch (error) {
-                    console.error("Firebase Error:", error);
-                    btnSpan.innerText = "ERROR - TRY AGAIN";
-                    waitlistSubmitBtn.style.pointerEvents = "auto";
-                    waitlistSubmitBtn.style.opacity = "1";
-                    
                     setTimeout(() => {
-                        if (!waitlistSubmitBtn.classList.contains('success')) {
-                            btnSpan.innerText = originalText;
+                        waitlistEmail.style.display = 'none';
+                        waitlistReason.style.display = 'block';
+                        void waitlistReason.offsetWidth; // Force reflow
+
+                        btnSpan.innerText = "SUBMIT APPLICATION";
+                        waitlistReason.style.opacity = '1';
+                        waitlistSubmitBtn.style.opacity = '1';
+                        waitlistSubmitBtn.style.pointerEvents = "auto";
+                        waitlistReason.required = true;
+                        waitlistReason.focus();
+                    }, 300);
+                }
+            } else if (currentStep === 2) {
+                if (waitlistReason && waitlistReason.value) {
+                    const originalText = btnSpan.innerText;
+                    btnSpan.innerText = "PROCESSING...";
+                    waitlistSubmitBtn.style.pointerEvents = "none";
+                    waitlistSubmitBtn.style.opacity = "0.7";
+                    
+                    try {
+                        await db.collection("waitlist").add({
+                            email: waitlistEmail.value.trim(),
+                            reason: waitlistReason.value.trim(),
+                            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                            source: 'landing_page'
+                        });
+
+                        btnSpan.innerText = "ACCESS SECURED";
+                        waitlistSubmitBtn.style.opacity = "1";
+                        waitlistSubmitBtn.classList.add('success');
+
+                        const hintDiv = document.querySelector('.waitlist-hint');
+                        if (hintDiv) {
+                            hintDiv.innerHTML = "Application received securely. You will be notified via email.";
+                            hintDiv.style.color = "#cccccc";
                         }
-                    }, 4000);
+                    } catch (error) {
+                        console.error("Firebase Error:", error);
+                        btnSpan.innerText = "ERROR - TRY AGAIN";
+                        waitlistSubmitBtn.style.pointerEvents = "auto";
+                        waitlistSubmitBtn.style.opacity = "1";
+                        
+                        setTimeout(() => {
+                            if (!waitlistSubmitBtn.classList.contains('success')) {
+                                btnSpan.innerText = originalText;
+                            }
+                        }, 4000);
+                    }
                 }
             }
         });

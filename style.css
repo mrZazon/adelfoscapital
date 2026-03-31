@@ -562,8 +562,16 @@ body {
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
 }
 
-.waitlist-input {
+.input-wrapper {
     flex: 1;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    min-width: 0;
+}
+
+.waitlist-input {
+    width: 100%;
     background: transparent;
     border: none;
     color: #fff;
@@ -571,7 +579,7 @@ body {
     font-family: var(--font-main);
     font-size: 0.95rem;
     outline: none;
-    min-width: 0;
+    transition: opacity 0.3s ease;
 }
 
 .waitlist-input::placeholder {

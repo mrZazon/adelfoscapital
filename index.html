@@ -50,8 +50,11 @@
         </div>
 
         <div class="waitlist-container" style="--delay: 0.7s">
-            <form id="waitlistForm" class="waitlist-form">
-                <input type="email" id="waitlistEmail" class="waitlist-input" placeholder="Corporate Email Address" required>
+            <form id="waitlistForm" class="waitlist-form process-step-1">
+                <div class="input-wrapper">
+                    <input type="email" id="waitlistEmail" class="waitlist-input" placeholder="Corporate Email Address" required>
+                    <input type="text" id="waitlistReason" class="waitlist-input" placeholder="Briefly describe your institutional use case..." style="display: none; opacity: 0; transition: opacity 0.4s ease;">
+                </div>
                 <button type="submit" id="waitlistSubmitBtn" class="waitlist-btn">
                     <span>REQUEST ACCESS</span>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
