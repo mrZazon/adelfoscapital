@@ -117,18 +117,40 @@ generateBtn.addEventListener('click', async () => {
     }
 });
 
-// Copy to Clipboard
-copyBtn.addEventListener('click', () => {
-    const key = apiKeyDisplay.innerText;
-    if (key.includes('•')) return;
+// Copy to Clipboard with fallback
+copyBtn.addEventListener('click', async () => {
+    const key = apiKeyDisplay.innerText.trim();
+    if (key.includes('•') || !key) {
+        console.warn('[ADELFOS] No key available to copy');
+        return;
+    }
 
-    navigator.clipboard.writeText(key).then(() => {
+    try {
+        if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(key);
+        } else {
+            // Fallback for non-secure contexts
+            const textArea = document.createElement("textarea");
+            textArea.value = key;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+        }
+        
+        // Success Feedback
         const originalSvg = copyBtn.innerHTML;
-        copyBtn.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18"><path fill="#00ff88" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`;
+        copyBtn.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20"><path fill="#00ff88" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`;
+        copyBtn.style.color = '#00ff88';
+        
         setTimeout(() => {
             copyBtn.innerHTML = originalSvg;
+            copyBtn.style.color = '';
         }, 2000);
-    });
+    } catch (err) {
+        console.error('[ADELFOS] Copy failed:', err);
+        alert('Failed to copy. Please select and copy manually.');
+    }
 });
 
 // Particles Background
