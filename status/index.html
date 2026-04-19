@@ -14,10 +14,204 @@
         href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;1,300&family=Inter:wght@300;400;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
+    <style>
+        body {
+            overflow-y: auto;
+            background-color: #000;
+        }
+
+        .status-container {
+            max-width: 1000px;
+            margin: 10rem auto 6rem;
+            padding: 0 2rem;
+            width: 100%;
+        }
+
+        .services-label {
+            display: block;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            color: #444;
+            margin-bottom: 1.2rem;
+        }
+
+        .status-header-main h1 {
+            font-size: clamp(2.5rem, 6vw, 3.8rem);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            color: #FFFFFF;
+            margin-bottom: 2rem;
+        }
+
+        /* Fixed Countdown at Top */
+        .status-countdown-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(30px) saturate(150%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Status Row Design */
+        .status-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin-top: 3rem;
+        }
+
+        .status-row {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem 2.2rem;
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .status-row:hover {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.005);
+        }
+
+        .service-meta {
+            flex: 0 0 220px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .service-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #eee;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            letter-spacing: -0.01em;
+        }
+
+        .service-uptime {
+            font-size: 0.8rem;
+            color: #00ff88;
+            font-family: 'Inter', monospace;
+            opacity: 0.9;
+        }
+
+        /* Uptime Bars */
+        .uptime-bars {
+            flex: 1;
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            height: 30px;
+        }
+
+        .uptime-bar {
+            flex: 1;
+            height: 22px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .uptime-bar.up {
+            background: #222;
+        }
+
+        .uptime-bar.recent.up {
+            background: #00ff88;
+            opacity: 0.3;
+        }
+
+        .uptime-bar.recent:last-child {
+            background: #00ff88;
+            opacity: 1;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
+        }
+
+        .uptime-bar.down {
+            background: #ff4444;
+        }
+
+        .service-status {
+            flex: 0 0 80px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.6rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .service-status.is-up {
+            color: #00ff88;
+        }
+
+        .status-dot-static {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        /* Grid Background for Footer */
+        .footer-cta {
+            position: relative;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .footer-cta::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            background-position: center;
+            opacity: 0.5;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+            -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
+            z-index: 0;
+        }
+
+        @media (max-width: 900px) {
+            .status-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.2rem;
+                padding: 1.5rem 1.8rem;
+            }
+            .service-meta, .uptime-bars, .service-status {
+                flex: none;
+                width: 100%;
+            }
+            .service-status {
+                justify-content: flex-start;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <header class="logo-container">
+    <header class="logo-container" style="z-index: 101;">
         <a href="/" style="text-decoration: none;">
             <div class="logo">
                 <span class="logo-alpha">α</span>
@@ -28,29 +222,47 @@
         </a>
     </header>
 
-    <a href="/" class="back-link" style="position: fixed; top: 2rem; right: 2rem; color: #777; text-decoration: none; font-size: 0.9rem;">← Return to Terminal</a>
+    <div class="status-countdown-wrapper">
+        <div id="countdown" class="countdown scrolled" style="position: relative; top: 0; left: 0; transform: none; background: transparent; border: none; box-shadow: none; backdrop-filter: none;">
+            <div class="countdown-item"><span id="years">00</span><label>Years</label></div>
+            <div class="countdown-item"><span id="months">00</span><label>Months</label></div>
+            <div class="countdown-item"><span id="days">00</span><label>Days</label></div>
+            <div class="countdown-item"><span id="hours">00</span><label>Hours</label></div>
+            <div class="countdown-item"><span id="minutes">00</span><label>Minutes</label></div>
+            <div class="countdown-item"><span id="seconds">00</span><label>Seconds</label></div>
+        </div>
+    </div>
 
-    <main class="status-page-container">
-        <div class="status-header" style="margin-bottom: 4rem; text-align: left;">
-            <span class="launch-label" style="--delay: 0s">SYSTEM OVERVIEW</span>
-            <h1 style="font-size: 3rem; margin-bottom: 1rem; letter-spacing: -0.04em;">Operational Status</h1>
-            <div class="overall-status" id="overallStatusContainer" style="display: inline-flex; align-items: center; gap: 0.8rem; padding: 1rem 2rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; font-weight: 500; font-size: 1.1rem; margin-top: 2rem;">
+    <main class="status-container">
+        <div class="status-header-main">
+            <span class="services-label">SYSTEM HEALTH</span>
+            <h1>Operations Status</h1>
+            
+            <div class="overall-status" id="overallStatusContainer" style="display: inline-flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.8rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 50px; font-weight: 500; font-size: 0.9rem; margin-top: 1rem;">
                 <span class="status-dot loading" id="overallStatusDot"></span>
-                <span id="overallStatusText">Checking systems...</span>
+                <span id="overallStatusText" style="letter-spacing: 0.05em; color: #888;">Synchronizing reality...</span>
             </div>
-            <div id="errorMessage" class="error-message" style="color: #ff4444; background: rgba(255, 68, 68, 0.1); padding: 1rem; border-radius: 8px; margin-top: 2rem; display: none;"></div>
+            <div id="errorMessage" class="error-message" style="color: #ff4444; background: rgba(255, 68, 68, 0.05); padding: 1rem; border-radius: 8px; margin-top: 2rem; display: none; font-size: 0.85rem; border: 1px solid rgba(255, 68, 68, 0.1);"></div>
         </div>
 
-        <div class="monitors-grid" id="monitorsGrid" style="display: grid; gap: 1.5rem; margin-top: 3rem;">
+        <div class="status-list" id="monitorsGrid">
             <!-- Monitors will be injected here -->
-            <div class="monitor-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; opacity: 0.5;">
-                <div class="monitor-info" style="display: flex; flex-direction: column; gap: 0.3rem;">
-                    <div class="monitor-name" style="font-weight: 600; font-size: 1.1rem; color: #fff;">Loading monitors...</div>
-                    <div class="monitor-uptime" style="font-size: 0.85rem; color: #777;">Retrieving real-time data</div>
+            <div class="status-row" style="opacity: 0.3;">
+                <div class="service-meta">
+                    <div class="service-name">Loading nodes...</div>
                 </div>
             </div>
         </div>
     </main>
+
+    <!-- Footer CTA Section -->
+    <section class="footer-cta" id="footerCTA" style="margin-top: 5rem; border-top: 1px solid rgba(255, 255, 255, 0.05);">
+        <h2 style="font-family: 'Crimson Pro', serif; font-style: italic; font-weight: 300;">The calculation is running.</h2>
+        <p>Only fifty alpha terminal keys will be minted before the global v1.0 release.</p>
+        <a href="/#heroSection" class="waitlist-btn large" style="text-decoration: none;">
+            <span>SECURE YOUR TERMINAL</span>
+        </a>
+    </header>
 
     <script type="module" src="status.js"></script>
 </body>
