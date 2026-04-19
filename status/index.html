@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Adelfos Capital: System status and real-time service health.">
+    <title>Status | Adelfos Capital Terminal</title>
+    <link rel="icon"
+        href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB4PSI1MCUiIHk9IjU0JSIgZm9udC1zaXplPSI3NSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJzZXJpZiIgZm9udC1zdHlsZT0iaXRhbGljIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCI+zrE8L3RleHQ+PC9zdmc+">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;1,300&family=Inter:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <header class="logo-container">
+        <a href="/" style="text-decoration: none;">
+            <div class="logo">
+                <span class="logo-alpha">α</span>
+                <div class="logo-text">
+                    <span class="bold">Adelfos</span><span class="thin">Capital</span>
+                </div>
+            </div>
+        </a>
+    </header>
+
+    <a href="/" class="back-link" style="position: fixed; top: 2rem; right: 2rem; color: #777; text-decoration: none; font-size: 0.9rem;">← Return to Terminal</a>
+
+    <main class="status-page-container">
+        <div class="status-header" style="margin-bottom: 4rem; text-align: left;">
+            <span class="launch-label" style="--delay: 0s">SYSTEM OVERVIEW</span>
+            <h1 style="font-size: 3rem; margin-bottom: 1rem; letter-spacing: -0.04em;">Operational Status</h1>
+            <div class="overall-status" id="overallStatusContainer" style="display: inline-flex; align-items: center; gap: 0.8rem; padding: 1rem 2rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; font-weight: 500; font-size: 1.1rem; margin-top: 2rem;">
+                <span class="status-dot loading" id="overallStatusDot"></span>
+                <span id="overallStatusText">Checking systems...</span>
+            </div>
+            <div id="errorMessage" class="error-message" style="color: #ff4444; background: rgba(255, 68, 68, 0.1); padding: 1rem; border-radius: 8px; margin-top: 2rem; display: none;"></div>
+        </div>
+
+        <div class="monitors-grid" id="monitorsGrid" style="display: grid; gap: 1.5rem; margin-top: 3rem;">
+            <!-- Monitors will be injected here -->
+            <div class="monitor-card" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; opacity: 0.5;">
+                <div class="monitor-info" style="display: flex; flex-direction: column; gap: 0.3rem;">
+                    <div class="monitor-name" style="font-weight: 600; font-size: 1.1rem; color: #fff;">Loading monitors...</div>
+                    <div class="monitor-uptime" style="font-size: 0.85rem; color: #777;">Retrieving real-time data</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="status.js"></script>
+</body>
+
+</html>
