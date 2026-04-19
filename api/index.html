@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adelfos Terminal | API Access</title>
+    <link rel="icon"
+        href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB4PSI1MCUiIHk9IjU0JSIgZm9udC1zaXplPSI3NSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJzZXJpZiIgZm9udC1zdHlsZT0iaXRhbGljIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCI+zrE8L3RleHQ+PC9zdmc+">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;1,300&family=Inter:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="logo-container">
+        <a href="/" class="logo" style="text-decoration: none;">
+            <span class="logo-alpha">α</span>
+            <div class="logo-text">
+                <span class="bold">Adelfos</span><span class="thin">Capital</span>
+            </div>
+        </a>
+    </header>
+
+    <main class="api-container">
+        <!-- Auth View -->
+        <div id="authView" class="view visible">
+            <div class="auth-card">
+                <span class="view-label">SECURE ACCESS</span>
+                <h1>Terminal API</h1>
+                <p>Enter your institutional credentials to manage your simulation access keys.</p>
+
+                <form id="authForm" class="auth-form">
+                    <div class="input-group">
+                        <label for="email">Institutional Email</label>
+                        <input type="email" id="email" placeholder="name@firm.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" id="authBtn" class="btn-primary">
+                        <span id="authBtnText">ENTER TERMINAL</span>
+                        <div class="loader" id="authLoader" style="display: none;"></div>
+                    </button>
+                    <div id="authError" class="error-msg"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard View -->
+        <div id="dashboardView" class="view">
+            <div class="dashboard-card">
+                <div class="dashboard-header">
+                    <div>
+                        <span class="view-label">API DASHBOARD</span>
+                        <h1 id="userEmail">Loading...</h1>
+                    </div>
+                    <button id="logoutBtn" class="btn-outline-mini">LOGOUT</button>
+                </div>
+
+                <div class="key-management">
+                    <div class="key-status-card">
+                        <div class="status-info">
+                            <span class="label">CURRENT KEY</span>
+                            <div class="key-display-wrapper">
+                                <code id="apiKeyDisplay">••••••••••••••••••••••••••••</code>
+                                <button id="copyBtn" class="copy-btn" title="Copy to clipboard">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <p class="warning-text" id="keyWarning" style="display: none;">
+                                WARNING: This is the only time your raw key will be shown. Copy and store it securely.
+                            </p>
+                        </div>
+                        <button id="generateBtn" class="btn-primary">GENERATE NEW KEY</button>
+                    </div>
+
+                    <div class="usage-stats">
+                        <div class="stat-item">
+                            <span class="label">RATE LIMIT</span>
+                            <span class="value" id="rateLimit">60/hr</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="label">STATUS</span>
+                            <span class="value status-active">OPERATIONAL</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="api-docs-preview">
+                    <h3>Quick Start</h3>
+                    <div class="code-block">
+                        <pre>curl -X POST https://api.adelfos.app/v1/simulate \
+  -H "X-API-Key: YOUR_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"ticker": "NVDA", "n_sim": 100000}'</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Firebase SDK (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>

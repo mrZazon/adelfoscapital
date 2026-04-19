@@ -7,6 +7,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         status: resolve(__dirname, 'status/index.html'),
+        api: resolve(__dirname, 'api/index.html'),
       },
     },
   },
