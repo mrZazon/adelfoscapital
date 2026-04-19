@@ -33,7 +33,6 @@ const logoutBtn = document.getElementById('logout-btn');
 const apiKeyDisplay = document.getElementById('api-key-display');
 const generateBtn = document.getElementById('generate-btn');
 const copyBtn = document.getElementById('copy-btn');
-const revealBtn = document.getElementById('reveal-btn');
 const deleteBtn = document.getElementById('delete-btn');
 
 const MASK = '•••• •••• •••• ••••';
@@ -41,26 +40,11 @@ const MASK = '•••• •••• •••• ••••';
 function maskKey() {
     _keyInMemory = null;
     apiKeyDisplay.innerText = MASK;
-    copyBtn.disabled = true;
-    copyBtn.style.opacity = '0.3';
-    if (revealBtn) {
-        const s = revealBtn.querySelector('span');
-        if (s) s.innerText = 'Reveal Key';
-        revealBtn.disabled = false;
-        revealBtn.style.opacity = '1';
-    }
 }
 
 function revealKey(key) {
     _keyInMemory = key;
     apiKeyDisplay.innerText = key;
-    copyBtn.disabled = false;
-    copyBtn.style.opacity = '1';
-    if (revealBtn) {
-        const s = revealBtn.querySelector('span');
-        if (s) s.innerText = 'Hide Key';
-        revealBtn.disabled = false;
-    }
 }
 
 // Auth State
@@ -109,48 +93,82 @@ logoutBtn.addEventListener('click', () => {
     auth.signOut();
 });
 
-// Reveal / Hide toggle
-if (revealBtn) {
-    revealBtn.addEventListener('click', async () => {
-        // If already revealed, just hide
-        if (_keyInMemory) {
-            maskKey();
+// Fetch key from backend into memory
+async function fetchKeyIntoMemory() {
+    const user = auth.currentUser;
+    if (!user) return false;
+
+    const idToken = await user.getIdToken();
+    const response = await fetch(`${API_BASE_URL}/v1/keys/me`, {
+        headers: { 'Authorization': `Bearer ${idToken}` }
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        if (data.api_key) {
+            _keyInMemory = data.api_key;
+            return true;
+        }
+    }
+    return false;
+}
+
+// Copy — fetches silently if not in memory yet
+copyBtn.addEventListener('click', async () => {
+    // If not in memory, fetch it first silently
+    if (!_keyInMemory) {
+        const originalSvg = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20"><path fill="#666" d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>';
+        copyBtn.disabled = true;
+
+        try {
+            const ok = await fetchKeyIntoMemory();
+            if (!ok) {
+                copyBtn.innerHTML = originalSvg;
+                copyBtn.disabled = false;
+                return;
+            }
+        } catch (err) {
+            console.error('[COPY] Fetch failed:', err);
+            copyBtn.innerHTML = originalSvg;
+            copyBtn.disabled = false;
             return;
         }
 
-        const user = auth.currentUser;
-        if (!user) return;
+        copyBtn.innerHTML = originalSvg;
+        copyBtn.disabled = false;
+    }
 
-        const btnSpan = revealBtn.querySelector('span');
-        const original = btnSpan ? btnSpan.innerText : '';
-        if (btnSpan) btnSpan.innerText = 'LOADING...';
-        revealBtn.disabled = true;
+    // Now copy from memory
+    const showSuccess = () => {
+        const originalSvg = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20"><path fill="#00ff88" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+        copyBtn.style.color = '#00ff88';
+        setTimeout(() => {
+            copyBtn.innerHTML = originalSvg;
+            copyBtn.style.color = '';
+        }, 2000);
+    };
 
-        try {
-            const idToken = await user.getIdToken();
-            const response = await fetch(`${API_BASE_URL}/v1/keys/me`, {
-                headers: { 'Authorization': `Bearer ${idToken}` }
-            });
+    const fallbackCopy = () => {
+        const ta = document.createElement('textarea');
+        ta.value = _keyInMemory;
+        ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        if (ok) showSuccess();
+        else alert('No se pudo copiar. Selecciona la clave manualmente.');
+    };
 
-            const data = await response.json();
-
-            if (response.ok && data.api_key) {
-                revealKey(data.api_key);
-            } else if (response.status === 404) {
-                apiKeyDisplay.innerText = 'No key yet — generate one.';
-            } else {
-                alert(data.detail || 'Could not retrieve key.');
-                if (btnSpan) btnSpan.innerText = original;
-                revealBtn.disabled = false;
-            }
-        } catch (err) {
-            console.error('Reveal Error:', err);
-            alert('Network error.');
-            if (btnSpan) btnSpan.innerText = original;
-            revealBtn.disabled = false;
-        }
-    });
-}
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(_keyInMemory).then(showSuccess).catch(fallbackCopy);
+    } else {
+        fallbackCopy();
+    }
+});
 
 // Generate API Key
 generateBtn.addEventListener('click', async () => {
@@ -185,40 +203,6 @@ generateBtn.addEventListener('click', async () => {
     } finally {
         btnSpan.innerText = original;
         generateBtn.disabled = false;
-    }
-});
-
-// Copy — reads from _keyInMemory, never from DOM
-copyBtn.addEventListener('click', () => {
-    if (!_keyInMemory) return;
-
-    const showSuccess = () => {
-        const originalSvg = copyBtn.innerHTML;
-        copyBtn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20"><path fill="#00ff88" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
-        copyBtn.style.color = '#00ff88';
-        setTimeout(() => {
-            copyBtn.innerHTML = originalSvg;
-            copyBtn.style.color = '';
-        }, 2000);
-    };
-
-    const fallbackCopy = () => {
-        const ta = document.createElement('textarea');
-        ta.value = _keyInMemory;
-        ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;';
-        document.body.appendChild(ta);
-        ta.focus();
-        ta.select();
-        const ok = document.execCommand('copy');
-        document.body.removeChild(ta);
-        if (ok) showSuccess();
-        else alert('No se pudo copiar. Selecciona la clave manualmente.');
-    };
-
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(_keyInMemory).then(showSuccess).catch(fallbackCopy);
-    } else {
-        fallbackCopy();
     }
 });
 
