@@ -44,30 +44,9 @@
             margin-bottom: 2.5rem;
         }
 
-        /* Dynamic Island Countdown */
-        .dynamic-island-countdown {
-            position: fixed;
-            top: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            background: rgba(10, 10, 10, 0.7);
-            backdrop-filter: blur(25px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 100px;
-            padding: 0.8rem 2.5rem;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .dynamic-island-countdown:hover {
-            background: rgba(15, 15, 15, 0.85);
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateX(-50%) translateY(-2px);
+        /* Status Container Spacing */
+        .status-header-main {
+            margin-top: 2rem;
         }
 
         /* Status Row Design */
@@ -183,9 +162,9 @@
         }
 
         @media (max-width: 900px) {
-            .dynamic-island-countdown {
+            #countdown.scrolled {
                 width: 90%;
-                padding: 0.8rem 1.5rem;
+                padding: 0.6rem 1.5rem;
                 gap: 1rem;
             }
             .status-container {
@@ -220,15 +199,13 @@
         </a>
     </header>
 
-    <div class="dynamic-island-countdown">
-        <div id="countdown" class="countdown" style="display: flex; gap: 1rem; position: relative; top: 0; left: 0; transform: none; background: transparent; border: none; box-shadow: none; backdrop-filter: none; padding: 0;">
-            <div class="countdown-item" style="padding: 0; border: none;"><span id="years" style="font-size: 1rem; font-weight: 700; color: #fff;">00</span><label style="font-size: 0.55rem; color: #555; text-transform: uppercase; letter-spacing: 0.1em;">Y</label></div>
-            <div class="countdown-item" style="padding: 0; border: none;"><span id="months" style="font-size: 1rem; font-weight: 700; color: #fff;">00</span><label style="font-size: 0.55rem; color: #555; text-transform: uppercase; letter-spacing: 0.1em;">M</label></div>
-            <div class="countdown-item" style="padding: 0; border: none;"><span id="days" style="font-size: 1rem; font-weight: 700; color: #fff;">00</span><label style="font-size: 0.55rem; color: #555; text-transform: uppercase; letter-spacing: 0.1em;">D</label></div>
-            <div class="countdown-item" style="padding: 0; border: none;"><span id="hours" style="font-size: 1rem; font-weight: 700; color: #fff;">00</span><label style="font-size: 0.55rem; color: #555; text-transform: uppercase; letter-spacing: 0.1em;">H</label></div>
-            <div class="countdown-item" style="padding: 0; border: none;"><span id="minutes" style="font-size: 1rem; font-weight: 700; color: #fff;">00</span><label style="font-size: 0.55rem; color: #555; text-transform: uppercase; letter-spacing: 0.1em;">M</label></div>
-            <div class="countdown-item" style="padding: 0; border: none;"><span id="seconds" style="font-size: 1rem; font-weight: 700; color: #fff;">00</span><label style="font-size: 0.55rem; color: #555; text-transform: uppercase; letter-spacing: 0.1em;">S</label></div>
-        </div>
+    <div id="countdown" class="countdown scrolled">
+        <div class="countdown-item"><span id="years">00</span><label>Years</label></div>
+        <div class="countdown-item"><span id="months">00</span><label>Months</label></div>
+        <div class="countdown-item"><span id="days">00</span><label>Days</label></div>
+        <div class="countdown-item"><span id="hours">00</span><label>Hours</label></div>
+        <div class="countdown-item little"><span id="minutes">00</span><label>Min</label></div>
+        <div class="countdown-item smaller"><span id="seconds">00</span><label>Sec</label></div>
     </div>
 
     <main class="status-container">
