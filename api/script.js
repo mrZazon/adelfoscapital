@@ -96,14 +96,21 @@ generateBtn.addEventListener('click', async () => {
             }
         });
 
-        const data = await response.json();
+        const contentType = response.headers.get("content-type");
+        let data = {};
+        if (contentType && contentType.includes("application/json")) {
+            data = await response.json();
+        } else {
+            const rawBody = await response.text();
+            console.error('Non-JSON response:', rawBody);
+        }
 
         if (response.ok) {
             apiKeyDisplay.innerText = data.api_key;
             keyWarning.style.display = 'block';
             document.getElementById('rateLimit').innerText = `${data.rate_limit}/hr`;
         } else {
-            alert(data.detail || 'Failed to generate key');
+            alert(data.detail || 'Failed to generate key. Check console for details.');
         }
     } catch (error) {
         console.error('Generation Error:', error);
