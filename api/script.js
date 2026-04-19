@@ -15,68 +15,71 @@ if (!firebase.apps.length) {
 
 const auth = firebase.auth();
 let apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+// Remove trailing slash if exists
 if (apiBase.endsWith('/')) apiBase = apiBase.slice(0, -1);
 const API_BASE_URL = apiBase;
 
 console.log('[ADELFOS] API Base URL:', API_BASE_URL);
 
+// State
+let isLoading = false;
+
 // DOM Elements
-const loginContainer = document.getElementById('login-container');
-const dashboardContainer = document.getElementById('dashboard-container');
-const userStatus = document.getElementById('user-status');
+const authView = document.getElementById('authView');
+const dashboardView = document.getElementById('dashboardView');
+const authForm = document.getElementById('authForm');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
-const loginBtn = document.getElementById('login-btn');
-const loginError = document.getElementById('login-error');
-const userEmailDisplay = document.getElementById('user-email-display');
-const logoutBtn = document.getElementById('logout-btn');
-const apiKeyDisplay = document.getElementById('api-key-display');
-const generateBtn = document.getElementById('generate-btn');
-const copyBtn = document.getElementById('copy-btn');
+const authBtnText = document.getElementById('authBtnText');
+const authLoader = document.getElementById('authLoader');
+const authError = document.getElementById('authError');
+const userEmailDisplay = document.getElementById('userEmail');
+const logoutBtn = document.getElementById('logoutBtn');
+const apiKeyDisplay = document.getElementById('apiKeyDisplay');
+const generateBtn = document.getElementById('generateBtn');
+const copyBtn = document.getElementById('copyBtn');
+const keyWarning = document.getElementById('keyWarning');
 
 // Auth State Listener
 auth.onAuthStateChanged(user => {
     if (user) {
-        loginContainer.classList.add('hidden');
-        dashboardContainer.classList.remove('hidden');
-        userStatus.classList.remove('hidden');
+        showView('dashboard');
         userEmailDisplay.innerText = user.email;
-        document.body.classList.remove('login-active');
     } else {
-        loginContainer.classList.remove('hidden');
-        dashboardContainer.classList.add('hidden');
-        userStatus.classList.add('hidden');
-        document.body.classList.add('login-active');
+        showView('auth');
     }
 });
 
-// Login
-loginBtn.addEventListener('click', async () => {
+function showView(viewName) {
+    authView.classList.toggle('visible', viewName === 'auth');
+    dashboardView.classList.toggle('visible', viewName === 'dashboard');
+}
+
+// Handle Auth
+authForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
     const email = emailInput.value;
     const password = passwordInput.value;
 
-    if (!email || !password) return;
-
-    loginBtn.disabled = true;
-    const btnSpan = loginBtn.querySelector('span');
-    const originalText = btnSpan.innerText;
-    btnSpan.innerText = 'AUTHENTICATING...';
-    loginError.innerText = '';
+    authBtnText.style.display = 'none';
+    authLoader.style.display = 'block';
+    authError.innerText = '';
 
     try {
         await auth.signInWithEmailAndPassword(email, password);
     } catch (error) {
-        loginError.innerText = error.message;
+        authError.innerText = error.message;
     } finally {
-        btnSpan.innerText = originalText;
-        loginBtn.disabled = false;
+        authBtnText.style.display = 'block';
+        authLoader.style.display = 'none';
     }
 });
 
 // Logout
 logoutBtn.addEventListener('click', () => {
     auth.signOut();
-    apiKeyDisplay.innerText = '•••• •••• •••• ••••';
+    apiKeyDisplay.innerText = '••••••••••••••••••••••••••••';
+    keyWarning.style.display = 'none';
 });
 
 // Generate API Key
@@ -84,15 +87,15 @@ generateBtn.addEventListener('click', async () => {
     const user = auth.currentUser;
     if (!user) return;
 
-    const btnSpan = generateBtn.querySelector('span');
-    const originalText = btnSpan.innerText;
-    btnSpan.innerText = 'GENERATING SECURE KEY...';
+    const originalText = generateBtn.innerText;
+    generateBtn.innerText = 'GENERATING...';
     generateBtn.disabled = true;
 
     try {
         const idToken = await user.getIdToken();
         const targetUrl = `${API_BASE_URL}/v1/keys/generate`;
-        
+        console.log('[ADELFOS] Fetching:', targetUrl);
+
         const response = await fetch(targetUrl, {
             method: 'POST',
             headers: {
@@ -101,84 +104,46 @@ generateBtn.addEventListener('click', async () => {
             }
         });
 
-        const data = await response.json();
+        const contentType = response.headers.get("content-type");
+        let data = {};
+        if (contentType && contentType.includes("application/json")) {
+            data = await response.json();
+        } else {
+            const rawBody = await response.text();
+            console.error('Non-JSON response details:', {
+                status: response.status,
+                contentType: contentType,
+                body: rawBody.substring(0, 200)
+            });
+            throw new Error(`Server returned non-JSON response (${response.status})`);
+        }
 
         if (response.ok) {
             apiKeyDisplay.innerText = data.api_key;
+            keyWarning.style.display = 'block';
+            document.getElementById('rateLimit').innerText = `${data.rate_limit}/hr`;
         } else {
-            alert(data.detail || 'Failed to generate key.');
+            alert(data.detail || 'Failed to generate key. Check console for details.');
         }
     } catch (error) {
         console.error('Generation Error:', error);
-        alert('Network error. Ensure the API server is running.');
+        alert('Network error while generating key.');
     } finally {
-        btnSpan.innerText = originalText;
+        generateBtn.innerText = originalText;
         generateBtn.disabled = false;
     }
 });
 
-// Copy to Clipboard with fallback
+// Copy to Clipboard
 copyBtn.addEventListener('click', () => {
-    const key = apiKeyDisplay.innerText.trim();
-    if (key.includes('•') || !key) {
-        console.warn('[ADELFOS] No key available to copy');
-        return;
-    }
+    const key = apiKeyDisplay.innerText;
+    if (key.includes('•')) return;
 
-    const showSuccess = () => {
+    navigator.clipboard.writeText(key).then(() => {
         const originalSvg = copyBtn.innerHTML;
-        copyBtn.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20"><path fill="#00ff88" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`;
-        copyBtn.style.color = '#00ff88';
+        copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#44ff44" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
         setTimeout(() => {
             copyBtn.innerHTML = originalSvg;
-            copyBtn.style.color = '';
         }, 2000);
-    };
-
-    const fallbackCopy = () => {
-        const textArea = document.createElement('textarea');
-        textArea.value = key;
-        textArea.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        const ok = document.execCommand('copy');
-        document.body.removeChild(textArea);
-        if (ok) showSuccess();
-        else alert('No se pudo copiar. Selecciona y copia manualmente.');
-    };
-
-    console.log('[COPY] isSecureContext:', window.isSecureContext);
-    console.log('[COPY] clipboard available:', !!navigator.clipboard);
-    console.log('[COPY] key length:', key.length);
-
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(key)
-            .then(() => { console.log('[COPY] clipboard API success'); showSuccess(); })
-            .catch(err => { console.error('[COPY] clipboard API failed:', err.name, err.message); fallbackCopy(); });
-    } else {
-        console.warn('[COPY] using fallback (no clipboard API or not secure)');
-        fallbackCopy();
-    }
-});
-
-// Particles Background
-if (window.particlesJS) {
-    particlesJS("particles-js", {
-        "particles": {
-            "number": { "value": 40, "density": { "enable": true, "value_area": 800 } },
-            "color": { "value": "#ffffff" },
-            "shape": { "type": "circle" },
-            "opacity": { "value": 0.1, "random": false },
-            "size": { "value": 1, "random": true },
-            "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.05, "width": 1 },
-            "move": { "enable": true, "speed": 1, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
-        },
-        "interactivity": {
-            "detect_on": "canvas",
-            "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false } },
-            "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.1 } } }
-        },
-        "retina_detect": true
     });
-}
+});
