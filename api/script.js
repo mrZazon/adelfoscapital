@@ -8,95 +8,163 @@ const firebaseConfig = {
     appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-// Initialize Firebase
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
 const auth = firebase.auth();
 let apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
-// Remove trailing slash if exists
 if (apiBase.endsWith('/')) apiBase = apiBase.slice(0, -1);
 const API_BASE_URL = apiBase;
 
-console.log('[ADELFOS] API Base URL:', API_BASE_URL);
-
-// State
-let isLoading = false;
+// In-memory only — cleared on reload or logout
+let _keyInMemory = null;
 
 // DOM Elements
-const authView = document.getElementById('authView');
-const dashboardView = document.getElementById('dashboardView');
-const authForm = document.getElementById('authForm');
+const loginContainer = document.getElementById('login-container');
+const dashboardContainer = document.getElementById('dashboard-container');
+const userStatus = document.getElementById('user-status');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
-const authBtnText = document.getElementById('authBtnText');
-const authLoader = document.getElementById('authLoader');
-const authError = document.getElementById('authError');
-const userEmailDisplay = document.getElementById('userEmail');
-const logoutBtn = document.getElementById('logoutBtn');
-const apiKeyDisplay = document.getElementById('apiKeyDisplay');
-const generateBtn = document.getElementById('generateBtn');
-const copyBtn = document.getElementById('copyBtn');
-const keyWarning = document.getElementById('keyWarning');
+const loginBtn = document.getElementById('login-btn');
+const loginError = document.getElementById('login-error');
+const userEmailDisplay = document.getElementById('user-email-display');
+const logoutBtn = document.getElementById('logout-btn');
+const apiKeyDisplay = document.getElementById('api-key-display');
+const generateBtn = document.getElementById('generate-btn');
+const copyBtn = document.getElementById('copy-btn');
+const revealBtn = document.getElementById('reveal-btn');
+const deleteBtn = document.getElementById('delete-btn');
 
-// Auth State Listener
+const MASK = '•••• •••• •••• ••••';
+
+function maskKey() {
+    _keyInMemory = null;
+    apiKeyDisplay.innerText = MASK;
+    copyBtn.disabled = true;
+    copyBtn.style.opacity = '0.3';
+    if (revealBtn) {
+        const s = revealBtn.querySelector('span');
+        if (s) s.innerText = 'Reveal Key';
+        revealBtn.disabled = false;
+        revealBtn.style.opacity = '1';
+    }
+}
+
+function revealKey(key) {
+    _keyInMemory = key;
+    apiKeyDisplay.innerText = key;
+    copyBtn.disabled = false;
+    copyBtn.style.opacity = '1';
+    if (revealBtn) {
+        const s = revealBtn.querySelector('span');
+        if (s) s.innerText = 'Hide Key';
+        revealBtn.disabled = false;
+    }
+}
+
+// Auth State
 auth.onAuthStateChanged(user => {
     if (user) {
-        showView('dashboard');
+        loginContainer.classList.add('hidden');
+        dashboardContainer.classList.remove('hidden');
+        userStatus.classList.remove('hidden');
         userEmailDisplay.innerText = user.email;
+        document.body.classList.remove('login-active');
+        maskKey();
     } else {
-        showView('auth');
+        loginContainer.classList.remove('hidden');
+        dashboardContainer.classList.add('hidden');
+        userStatus.classList.add('hidden');
+        document.body.classList.add('login-active');
+        maskKey();
     }
 });
 
-function showView(viewName) {
-    authView.classList.toggle('visible', viewName === 'auth');
-    dashboardView.classList.toggle('visible', viewName === 'dashboard');
-}
-
-// Handle Auth
-authForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+// Login
+loginBtn.addEventListener('click', async () => {
     const email = emailInput.value;
     const password = passwordInput.value;
+    if (!email || !password) return;
 
-    authBtnText.style.display = 'none';
-    authLoader.style.display = 'block';
-    authError.innerText = '';
+    loginBtn.disabled = true;
+    const btnSpan = loginBtn.querySelector('span');
+    const original = btnSpan.innerText;
+    btnSpan.innerText = 'AUTHENTICATING...';
+    loginError.innerText = '';
 
     try {
         await auth.signInWithEmailAndPassword(email, password);
-    } catch (error) {
-        authError.innerText = error.message;
+    } catch (err) {
+        loginError.innerText = err.message;
     } finally {
-        authBtnText.style.display = 'block';
-        authLoader.style.display = 'none';
+        btnSpan.innerText = original;
+        loginBtn.disabled = false;
     }
 });
 
 // Logout
 logoutBtn.addEventListener('click', () => {
+    maskKey();
     auth.signOut();
-    apiKeyDisplay.innerText = '••••••••••••••••••••••••••••';
-    keyWarning.style.display = 'none';
 });
+
+// Reveal / Hide toggle
+if (revealBtn) {
+    revealBtn.addEventListener('click', async () => {
+        // If already revealed, just hide
+        if (_keyInMemory) {
+            maskKey();
+            return;
+        }
+
+        const user = auth.currentUser;
+        if (!user) return;
+
+        const btnSpan = revealBtn.querySelector('span');
+        const original = btnSpan ? btnSpan.innerText : '';
+        if (btnSpan) btnSpan.innerText = 'LOADING...';
+        revealBtn.disabled = true;
+
+        try {
+            const idToken = await user.getIdToken();
+            const response = await fetch(`${API_BASE_URL}/v1/keys/me`, {
+                headers: { 'Authorization': `Bearer ${idToken}` }
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.api_key) {
+                revealKey(data.api_key);
+            } else if (response.status === 404) {
+                apiKeyDisplay.innerText = 'No key yet — generate one.';
+            } else {
+                alert(data.detail || 'Could not retrieve key.');
+                if (btnSpan) btnSpan.innerText = original;
+                revealBtn.disabled = false;
+            }
+        } catch (err) {
+            console.error('Reveal Error:', err);
+            alert('Network error.');
+            if (btnSpan) btnSpan.innerText = original;
+            revealBtn.disabled = false;
+        }
+    });
+}
 
 // Generate API Key
 generateBtn.addEventListener('click', async () => {
     const user = auth.currentUser;
     if (!user) return;
 
-    const originalText = generateBtn.innerText;
-    generateBtn.innerText = 'GENERATING...';
+    const btnSpan = generateBtn.querySelector('span');
+    const original = btnSpan.innerText;
+    btnSpan.innerText = 'GENERATING SECURE KEY...';
     generateBtn.disabled = true;
 
     try {
         const idToken = await user.getIdToken();
-        const targetUrl = `${API_BASE_URL}/v1/keys/generate`;
-        console.log('[ADELFOS] Fetching:', targetUrl);
-
-        const response = await fetch(targetUrl, {
+        const response = await fetch(`${API_BASE_URL}/v1/keys/generate`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${idToken}`,
@@ -104,46 +172,108 @@ generateBtn.addEventListener('click', async () => {
             }
         });
 
-        const contentType = response.headers.get("content-type");
-        let data = {};
-        if (contentType && contentType.includes("application/json")) {
-            data = await response.json();
-        } else {
-            const rawBody = await response.text();
-            console.error('Non-JSON response details:', {
-                status: response.status,
-                contentType: contentType,
-                body: rawBody.substring(0, 200)
-            });
-            throw new Error(`Server returned non-JSON response (${response.status})`);
-        }
+        const data = await response.json();
 
         if (response.ok) {
-            apiKeyDisplay.innerText = data.api_key;
-            keyWarning.style.display = 'block';
-            document.getElementById('rateLimit').innerText = `${data.rate_limit}/hr`;
+            revealKey(data.api_key);
         } else {
-            alert(data.detail || 'Failed to generate key. Check console for details.');
+            alert(data.detail || 'Failed to generate key.');
         }
-    } catch (error) {
-        console.error('Generation Error:', error);
-        alert('Network error while generating key.');
+    } catch (err) {
+        console.error('Generation Error:', err);
+        alert('Network error. Ensure the API server is running.');
     } finally {
-        generateBtn.innerText = originalText;
+        btnSpan.innerText = original;
         generateBtn.disabled = false;
     }
 });
 
-// Copy to Clipboard
+// Copy — reads from _keyInMemory, never from DOM
 copyBtn.addEventListener('click', () => {
-    const key = apiKeyDisplay.innerText;
-    if (key.includes('•')) return;
+    if (!_keyInMemory) return;
 
-    navigator.clipboard.writeText(key).then(() => {
+    const showSuccess = () => {
         const originalSvg = copyBtn.innerHTML;
-        copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#44ff44" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+        copyBtn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20"><path fill="#00ff88" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+        copyBtn.style.color = '#00ff88';
         setTimeout(() => {
             copyBtn.innerHTML = originalSvg;
+            copyBtn.style.color = '';
         }, 2000);
-    });
+    };
+
+    const fallbackCopy = () => {
+        const ta = document.createElement('textarea');
+        ta.value = _keyInMemory;
+        ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        if (ok) showSuccess();
+        else alert('No se pudo copiar. Selecciona la clave manualmente.');
+    };
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(_keyInMemory).then(showSuccess).catch(fallbackCopy);
+    } else {
+        fallbackCopy();
+    }
 });
+
+// Revoke API Key
+if (deleteBtn) {
+    deleteBtn.addEventListener('click', async () => {
+        const user = auth.currentUser;
+        if (!user) return;
+        if (!confirm('Seguro que quieres revocar tu API key? Dejara de funcionar inmediatamente.')) return;
+
+        deleteBtn.disabled = true;
+        const btnSpan = deleteBtn.querySelector('span');
+        const original = btnSpan.innerText;
+        btnSpan.innerText = 'REVOKING...';
+
+        try {
+            const idToken = await user.getIdToken();
+            const response = await fetch(`${API_BASE_URL}/v1/keys/revoke`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${idToken}` }
+            });
+
+            if (response.ok) {
+                maskKey();
+            } else {
+                const data = await response.json();
+                alert(data.detail || 'Failed to revoke key.');
+            }
+        } catch (err) {
+            console.error('Revoke Error:', err);
+            alert('Network error. Ensure the API server is running.');
+        } finally {
+            btnSpan.innerText = original;
+            deleteBtn.disabled = false;
+        }
+    });
+}
+
+// Particles Background
+if (window.particlesJS) {
+    particlesJS("particles-js", {
+        "particles": {
+            "number": { "value": 40, "density": { "enable": true, "value_area": 800 } },
+            "color": { "value": "#ffffff" },
+            "shape": { "type": "circle" },
+            "opacity": { "value": 0.1, "random": false },
+            "size": { "value": 1, "random": true },
+            "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.05, "width": 1 },
+            "move": { "enable": true, "speed": 1, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false } },
+            "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.1 } } }
+        },
+        "retina_detect": true
+    });
+}
