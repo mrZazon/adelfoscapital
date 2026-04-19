@@ -23,7 +23,6 @@ console.log('[ADELFOS] API Base URL:', API_BASE_URL);
 // DOM Elements
 const loginContainer = document.getElementById('login-container');
 const dashboardContainer = document.getElementById('dashboard-container');
-const userStatus = document.getElementById('user-status');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const loginBtn = document.getElementById('login-btn');
@@ -39,13 +38,11 @@ auth.onAuthStateChanged(user => {
     if (user) {
         loginContainer.classList.add('hidden');
         dashboardContainer.classList.remove('hidden');
-        userStatus.classList.remove('hidden');
         userEmailDisplay.innerText = user.email;
         document.body.classList.remove('login-active');
     } else {
         loginContainer.classList.remove('hidden');
         dashboardContainer.classList.add('hidden');
-        userStatus.classList.add('hidden');
         document.body.classList.add('login-active');
     }
 });
@@ -117,40 +114,18 @@ generateBtn.addEventListener('click', async () => {
     }
 });
 
-// Copy to Clipboard with fallback
-copyBtn.addEventListener('click', async () => {
-    const key = apiKeyDisplay.innerText.trim();
-    if (key.includes('•') || !key) {
-        console.warn('[ADELFOS] No key available to copy');
-        return;
-    }
+// Copy to Clipboard
+copyBtn.addEventListener('click', () => {
+    const key = apiKeyDisplay.innerText;
+    if (key.includes('•')) return;
 
-    try {
-        if (navigator.clipboard && window.isSecureContext) {
-            await navigator.clipboard.writeText(key);
-        } else {
-            // Fallback for non-secure contexts
-            const textArea = document.createElement("textarea");
-            textArea.value = key;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-        }
-        
-        // Success Feedback
+    navigator.clipboard.writeText(key).then(() => {
         const originalSvg = copyBtn.innerHTML;
-        copyBtn.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20"><path fill="#00ff88" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`;
-        copyBtn.style.color = '#00ff88';
-        
+        copyBtn.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18"><path fill="#00ff88" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`;
         setTimeout(() => {
             copyBtn.innerHTML = originalSvg;
-            copyBtn.style.color = '';
         }, 2000);
-    } catch (err) {
-        console.error('[ADELFOS] Copy failed:', err);
-        alert('Failed to copy. Please select and copy manually.');
-    }
+    });
 });
 
 // Particles Background

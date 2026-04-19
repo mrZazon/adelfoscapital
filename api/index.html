@@ -3,95 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adelfos Terminal | API</title>
+    <title>Adelfos Terminal | API Access</title>
     <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB4PSI1MCUiIHk9IjU0JSIgZm9udC1zaXplPSI3NSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJzZXJpZiIgZm9udC1zdHlsZT0iaXRhbGljIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCI+zrE8L3RleHQ+PC9zdmc+">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@1,300&family=Inter:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;1,300&family=Inter:wght@300;400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="login-active">
     <div id="particles-js"></div>
     
-    <header class="navbar">
+    <header class="logo-container">
         <a href="/" class="logo">
             <span class="logo-alpha">α</span>
             <div class="logo-text">
                 <span class="bold">Adelfos</span><span class="thin">Capital</span>
             </div>
         </a>
-        <div id="user-status" class="hidden">
-            <div class="user-pill">
-                <span id="user-email-display"></span>
-                <button id="logout-btn">Logout</button>
-            </div>
-        </div>
     </header>
 
-    <main class="viewport">
-        <!-- Auth View -->
-        <div id="login-container" class="auth-wrapper">
-            <div class="bento-card auth-card">
-                <div class="card-header">
-                    <span class="tag">SECURE ACCESS</span>
-                    <h1>Terminal Login</h1>
-                    <p>Enter institutional credentials</p>
-                </div>
-                
-                <div class="login-form">
-                    <input type="email" id="email" placeholder="Email address" required>
-                    <input type="password" id="password" placeholder="Password" required>
-                    <button id="login-btn" class="pill-btn primary">
-                        <span>Authenticate</span>
-                        <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
-                    </button>
-                    <div id="login-error" class="error-msg"></div>
-                </div>
+    <!-- Login Container -->
+    <div id="login-container" class="terminal-card glass-panel">
+        <div class="card-header">
+            <span class="services-label">SECURE INFRASTRUCTURE</span>
+            <h1>Terminal Login</h1>
+        </div>
+        
+        <div class="login-form">
+            <div class="input-group">
+                <label for="email">USER EMAIL</label>
+                <input type="email" id="email" placeholder="name@firm.com" required>
+            </div>
+            <div class="input-group">
+                <label for="password">ACCESS PASSWORD</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+            
+            <button id="login-btn" class="primary-btn">
+                <span>ENTER TERMINAL</span>
+                <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+            </button>
+            <div id="login-error" class="error-msg"></div>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div id="dashboard-container" class="hidden">
+        <div class="dashboard-header">
+            <div class="user-pill">
+                <span class="status-dot-static"></span>
+                <span id="user-email-display">user@adelfos.app</span>
+                <button id="logout-btn" class="text-btn">LOGOUT</button>
             </div>
         </div>
 
-        <!-- Dashboard View -->
-        <div id="dashboard-container" class="dashboard-grid hidden">
-            <!-- Main Key Card -->
-            <div class="bento-card key-card">
+        <div class="main-grid">
+            <div class="terminal-card glass-panel main-card">
                 <div class="card-header">
-                    <span class="tag">API ACCESS</span>
-                    <h2>Simulation Key</h2>
+                    <span class="services-label">ACCESS MODULE</span>
+                    <h2>Simulation API</h2>
                 </div>
-                <div class="key-display-pill">
-                    <code id="api-key-display">•••• •••• •••• ••••</code>
-                    <button id="copy-btn" class="icon-btn">
-                        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+
+                <div class="key-section">
+                    <span class="services-label">ACTIVE CREDENTIALS</span>
+                    <div class="api-key-box">
+                        <code id="api-key-display">•••• •••• •••• ••••</code>
+                        <button id="copy-btn" class="icon-btn" title="Copy to clipboard">
+                            <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button id="generate-btn" class="secondary-btn">
+                        <span>REGENERATE MASTER KEY</span>
                     </button>
-                </div>
-                <div class="card-footer">
-                    <button id="generate-btn" class="pill-btn secondary">Regenerate Key</button>
-                    <p class="hint">One active key per account.</p>
+                    <p class="hint">Generating a new key will immediately revoke the current one.</p>
                 </div>
             </div>
 
-            <!-- Stats & Info -->
-            <div class="bento-card stat-card">
-                <span class="tag">LIMIT</span>
-                <div class="big-stat">60<small>req/hr</small></div>
-            </div>
-
-            <div class="bento-card stat-card">
-                <span class="tag">STATUS</span>
-                <div class="status-pill active">
-                    <span class="dot"></span>
-                    Operational
+            <div class="side-panel">
+                <div class="terminal-card glass-panel small-card">
+                    <span class="services-label">QUOTA</span>
+                    <div class="stat">
+                        <span class="value">60</span>
+                        <span class="unit">REQ/HR</span>
+                    </div>
                 </div>
-            </div>
-
-            <div class="bento-card help-card">
-                <span class="tag">DOCUMENTATION</span>
-                <p>Use <code>X-API-Key</code> header for all requests.</p>
-                <a href="/docs" class="text-link">View API Docs →</a>
+                <div class="terminal-card glass-panel small-card">
+                    <span class="services-label">LICENSE</span>
+                    <div class="stat">
+                        <span class="value">ACTIVE</span>
+                        <span class="status-dot"></span>
+                    </div>
+                </div>
             </div>
         </div>
-    </main>
+    </div>
 
+    <!-- Firebase SDK (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
