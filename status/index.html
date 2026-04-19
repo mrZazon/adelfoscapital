@@ -15,136 +15,112 @@
         rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
     <style>
-        :root {
-            --pitch-white: #FFFFFF;
-            --granate-red: #A12D2D;
-            --na-gray: #222222;
-            --history-gray: #444444;
-        }
-
         body {
             overflow-y: auto;
             background-color: #000;
-            padding-bottom: 200px; /* Space for sticky footer */
         }
 
-        .status-header-main {
-            max-width: 1000px;
-            margin: 12rem auto 2rem;
+        .status-container {
+            max-width: 900px;
+            margin: 12rem auto 8rem;
             padding: 0 2rem;
-            text-align: left;
+            width: 100%;
         }
 
         .services-label {
             display: block;
             font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 0.4em;
-            color: #444;
-            margin-bottom: 1.2rem;
+            letter-spacing: 0.5em;
+            color: #333;
+            margin-bottom: 1.5rem;
         }
 
         .status-header-main h1 {
-            font-size: clamp(2.5rem, 6vw, 3.8rem);
+            font-size: clamp(2.5rem, 6vw, 3.5rem);
             font-weight: 700;
-            letter-spacing: -0.04em;
-            color: var(--pitch-white);
-            margin-bottom: 2rem;
+            letter-spacing: -0.05em;
+            color: #FFFFFF;
+            margin-bottom: 2.5rem;
         }
 
-        /* Dynamic Island Countdown (Floating Pill) */
-        .dynamic-island-wrapper {
+        /* Dynamic Island Countdown */
+        .dynamic-island-countdown {
             position: fixed;
             top: 2rem;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
-            pointer-events: none;
-        }
-
-        #countdown.dynamic-island {
-            display: flex;
-            gap: 1.5rem;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(25px) saturate(160%);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 100px;
-            padding: 0.6rem 2.8rem;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
-            pointer-events: auto;
+            padding: 0.8rem 2.5rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        #countdown.dynamic-island .countdown-item span {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--pitch-white);
-            line-height: 1;
+        .dynamic-island-countdown:hover {
+            background: rgba(15, 15, 15, 0.85);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(-50%) translateY(-2px);
         }
 
-        #countdown.dynamic-island .countdown-item label {
-            font-size: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: #666;
-            display: block;
-            margin-top: 2px;
-        }
-
-        /* Status List */
-        .status-list-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 2rem;
+        /* Status Row Design */
+        .status-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 4rem;
         }
 
         .status-row {
-            background: rgba(255, 255, 255, 0.01);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            padding: 1.5rem 2.2rem;
+            background: rgba(255, 255, 255, 0.012);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            padding: 1.8rem 2.2rem;
             display: flex;
             align-items: center;
-            gap: 2.5rem;
-            margin-bottom: 1rem;
+            gap: 3rem;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .status-row:hover {
-            border-color: rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.025);
+            border-color: rgba(255, 255, 255, 0.1);
         }
 
         .service-meta {
-            flex: 0 0 220px;
+            flex: 0 0 180px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 1.5rem;
         }
 
         .service-name {
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: #888;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #fff;
             letter-spacing: -0.01em;
-            transition: color 0.3s ease;
-        }
-
-        .status-row:hover .service-name {
-            color: var(--pitch-white);
+            text-transform: uppercase;
         }
 
         .service-uptime {
             font-size: 0.8rem;
-            color: var(--pitch-white);
+            color: #777;
             font-family: 'Inter', monospace;
-            opacity: 0.5;
         }
 
-        /* Activity Bars */
+        /* Uptime Bars */
         .uptime-bars {
             flex: 1;
             display: flex;
-            gap: 2px;
+            gap: 3px;
             align-items: center;
             height: 24px;
         }
@@ -152,37 +128,39 @@
         .uptime-bar {
             flex: 1;
             height: 18px;
-            background: var(--na-gray);
+            background: #1a1a1a;
             border-radius: 1px;
             transition: all 0.3s ease;
         }
 
         .uptime-bar.up {
-            background: var(--history-gray);
+            background: #252525;
         }
 
         .uptime-bar.recent.up {
-            background: var(--pitch-white);
-            opacity: 0.3;
+            background: #FFFFFF;
+            opacity: 0.15;
         }
 
         .uptime-bar.recent:last-child {
-            background: var(--pitch-white);
+            background: #FFFFFF;
             opacity: 1;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
         }
 
         .uptime-bar.down {
-            background: var(--granate-red);
+            background: #A01010;
+            opacity: 1;
+            box-shadow: 0 0 8px rgba(160, 16, 16, 0.5);
         }
 
         .service-status {
-            flex: 0 0 80px;
+            flex: 0 0 100px;
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 0.6rem;
-            font-size: 0.8rem;
+            gap: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
             color: #444;
             text-transform: uppercase;
@@ -190,119 +168,41 @@
         }
 
         .service-status.is-up {
-            color: var(--pitch-white);
+            color: #FFFFFF;
         }
 
         .service-status.is-down {
-            color: var(--granate-red);
+            color: #A01010;
         }
 
         .status-dot-static {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
             border-radius: 50%;
             background: currentColor;
         }
 
-        /* Sticky Bottom CTA Island */
-        .sticky-cta-wrapper {
-            position: fixed;
-            bottom: 3rem;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            width: auto;
-            min-width: 600px;
-        }
-
-        .sticky-cta-island {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(40px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 100px;
-            padding: 1.2rem 3rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 4rem;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Background Grid for CTA Island */
-        .sticky-cta-island::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px;
-            background-position: center;
-            opacity: 0.8;
-            mask-image: radial-gradient(circle at center, black, transparent 80%);
-            -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
-            z-index: -1;
-        }
-
-        .cta-text h2 {
-            font-family: 'Crimson Pro', serif;
-            font-size: 1.8rem;
-            font-weight: 300;
-            font-style: italic;
-            color: var(--pitch-white);
-            line-height: 1;
-            margin-bottom: 0.2rem;
-        }
-
-        .cta-text p {
-            font-size: 0.75rem;
-            color: #666;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-
-        .waitlist-btn.premium {
-            background: var(--pitch-white);
-            color: #000;
-            padding: 0.8rem 2.2rem;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            letter-spacing: 0.1em;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .waitlist-btn.premium:hover {
-            background: #e0e0e0;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
-        }
-
         @media (max-width: 900px) {
-            .sticky-cta-wrapper {
+            .dynamic-island-countdown {
                 width: 90%;
-                min-width: unset;
-                bottom: 2rem;
+                padding: 0.8rem 1.5rem;
+                gap: 1rem;
             }
-            .sticky-cta-island {
-                flex-direction: column;
-                gap: 1.5rem;
-                border-radius: 24px;
-                padding: 1.5rem;
-                text-align: center;
+            .status-container {
+                margin-top: 10rem;
             }
             .status-row {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 1.2rem;
-                padding: 1.5rem 1.8rem;
+                gap: 1.5rem;
+                padding: 2rem;
             }
             .service-meta, .uptime-bars, .service-status {
                 flex: none;
                 width: 100%;
+            }
+            .service-status {
+                justify-content: flex-start;
             }
         }
     </style>
@@ -320,39 +220,48 @@
         </a>
     </header>
 
-    <div class="dynamic-island-wrapper">
-        <div id="countdown" class="dynamic-island">
-            <div class="countdown-item"><span id="years">00</span><label>Years</label></div>
-            <div class="countdown-item"><span id="months">00</span><label>Months</label></div>
-            <div class="countdown-item"><span id="days">00</span><label>Days</label></div>
-            <div class="countdown-item"><span id="hours">00</span><label>Hours</label></div>
-            <div class="countdown-item"><span id="minutes">00</span><label>Minutes</label></div>
-            <div class="countdown-item"><span id="seconds">00</span><label>Seconds</label></div>
+    <div class="dynamic-island-countdown">
+        <div id="countdown" class="countdown" style="display: flex; gap: 1rem; position: relative; top: 0; left: 0; transform: none; background: transparent; border: none; box-shadow: none; backdrop-filter: none; padding: 0;">
+            <div class="countdown-item" style="padding: 0; border: none;"><span id="years" style="font-size: 1rem; font-weight: 700; color: #fff;">00</span><label style="font-size: 0.55rem; color: #555; text-transform: uppercase; letter-spacing: 0.1em;">Y</label></div>
+            <div class="countdown-item" style="padding: 0; border: none;"><span id="months" style="font-size: 1rem; font-weight: 700; color: #fff;">00</span><label style="font-size: 0.55rem; color: #555; text-transform: uppercase; letter-spacing: 0.1em;">M</label></div>
+            <div class="countdown-item" style="padding: 0; border: none;"><span id="days" style="font-size: 1rem; font-weight: 700; color: #fff;">00</span><label style="font-size: 0.55rem; color: #555; text-transform: uppercase; letter-spacing: 0.1em;">D</label></div>
+            <div class="countdown-item" style="padding: 0; border: none;"><span id="hours" style="font-size: 1rem; font-weight: 700; color: #fff;">00</span><label style="font-size: 0.55rem; color: #555; text-transform: uppercase; letter-spacing: 0.1em;">H</label></div>
+            <div class="countdown-item" style="padding: 0; border: none;"><span id="minutes" style="font-size: 1rem; font-weight: 700; color: #fff;">00</span><label style="font-size: 0.55rem; color: #555; text-transform: uppercase; letter-spacing: 0.1em;">M</label></div>
+            <div class="countdown-item" style="padding: 0; border: none;"><span id="seconds" style="font-size: 1rem; font-weight: 700; color: #fff;">00</span><label style="font-size: 0.55rem; color: #555; text-transform: uppercase; letter-spacing: 0.1em;">S</label></div>
         </div>
     </div>
 
-    <main class="status-header-main">
-        <span class="services-label">SYSTEM HEALTH</span>
-        <h1>Operations Status</h1>
-        
-            <div id="errorMessage" class="error-message" style="color: var(--granate-red); background: rgba(161, 45, 45, 0.05); padding: 1rem; border-radius: 8px; margin-top: 2rem; display: none; font-size: 0.85rem; border: 1px solid rgba(161, 45, 45, 0.1);"></div>
+    <main class="status-container">
+        <div class="status-header-main">
+            <span class="services-label">INFRASTRUCTURE</span>
+            <h1>Real-Time Nodes</h1>
+            
+            <div class="overall-status" id="overallStatusContainer" style="display: inline-flex; align-items: center; gap: 0.8rem; padding: 0.7rem 1.5rem; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 50px; font-weight: 700; font-size: 0.75rem; margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                <span class="status-dot loading" id="overallStatusDot"></span>
+                <span id="overallStatusText" style="color: #444;">Syncing...</span>
+            </div>
+            <div id="errorMessage" class="error-message" style="color: #A01010; background: rgba(160, 16, 16, 0.05); padding: 1rem; border-radius: 8px; margin-top: 2rem; display: none; font-size: 0.85rem; border: 1px solid rgba(160, 16, 16, 0.1);"></div>
+        </div>
+
+        <div class="status-list" id="monitorsGrid">
+            <!-- Monitors will be injected here -->
+            <div class="status-row" style="opacity: 0.2;">
+                <div class="service-meta">
+                    <div class="service-name">Establishing Handshake...</div>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <div class="status-list-container" id="monitorsGrid">
-        <!-- Monitors will be injected here -->
-    </div>
-
-    <div class="sticky-cta-wrapper">
-        <div class="sticky-cta-island">
-            <div class="cta-text">
-                <h2>The calculation is running.</h2>
-                <p>Limited phase 1 terminal keys remain</p>
+    <footer style="margin-top: 10rem; padding: 4rem 2rem; border-top: 1px solid rgba(255,255,255,0.03); text-align: center;">
+        <div class="logo" style="opacity: 0.3; justify-content: center; margin-bottom: 2rem;">
+            <span class="logo-alpha">α</span>
+            <div class="logo-text">
+                <span class="bold">Adelfos</span><span class="thin">Capital</span>
             </div>
-            <a href="/#heroSection" class="waitlist-btn premium">
-                SECURE ACCESS
-            </a>
         </div>
-    </div>
+        <div style="font-size: 0.7rem; color: #333; letter-spacing: 0.2em; text-transform: uppercase;">Institutional Grade Infrastructure</div>
+    </footer>
 
     <script type="module" src="status.js"></script>
 </body>

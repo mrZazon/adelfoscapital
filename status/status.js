@@ -1,6 +1,6 @@
 /**
  * Adelfos Capital - Redesigned Status Page Logic
- * Integrates with UptimeRobot API v2 & Landing Page Theme
+ * Final Polish: Dynamic Island UI & Custom Naming
  */
 
 const targetDate = new Date('2028-10-11T15:00:00Z');
@@ -19,7 +19,7 @@ const ELEMENTS = {
 };
 
 /**
- * Sync Landing Page Countdown
+ * Sync Dynamic Island Countdown
  */
 function updateCountdown() {
     const now = new Date();
@@ -41,8 +41,8 @@ function updateCountdown() {
     if (months < 0) { months += 12; years--; }
 
     if (new Date() >= targetDate) {
-        const cd = document.getElementById('countdown');
-        if (cd) cd.innerHTML = "TERMINAL LIVE";
+        const island = document.querySelector('.dynamic-island-countdown');
+        if (island) island.innerHTML = "TERMINAL LIVE";
         return;
     }
 
@@ -82,12 +82,28 @@ async function fetchStatus() {
         renderMonitors(data.monitors);
     } catch (err) {
         console.error('Fetch error:', err);
-        showError(`NETWORK INTERRUPTION: ${err.message}`);
+        showError(`INFRASTRUCTURE SYNC FAILED: ${err.message}`);
     }
 }
 
 /**
- * Generate Uptime Bars Visualization
+ * Custom Naming Logic
+ */
+function getFriendlyName(monitor) {
+    const name = monitor.friendly_name.toLowerCase();
+    const url = (monitor.url || '').toLowerCase();
+    
+    if (name.includes('adelfos-api') || url.includes('adelfos-api')) {
+        return 'API';
+    }
+    if (name.includes('adelfos') || url.includes('adelfos')) {
+        return 'Terminal';
+    }
+    return monitor.friendly_name;
+}
+
+/**
+ * Generate Uptime Bars (White/Red Palette)
  */
 function generateBars(isUp) {
     let barsHtml = '';
@@ -95,6 +111,7 @@ function generateBars(isUp) {
     
     for (let i = 0; i < totalBars; i++) {
         const isRecent = i > totalBars - 10;
+        // If not up, show a red bar at the end
         const stateClass = isUp ? 'up' : (i === totalBars - 1 ? 'down' : 'up');
         const recentClass = isRecent ? 'recent' : '';
         barsHtml += `<div class="uptime-bar ${stateClass} ${recentClass}"></div>`;
@@ -109,20 +126,14 @@ function renderMonitors(monitors) {
     ELEMENTS.grid.innerHTML = '';
     let allUp = true;
 
-    monitors.forEach(monitor => {
-        // Filter out the current website as it's redundant
-        const name = monitor.friendly_name.toLowerCase();
-        const url = monitor.url?.toLowerCase() || '';
-        
-        if (name.includes('adelfoscapital.onrender.com') || url.includes('adelfoscapital.onrender.com')) {
-            return;
-        }
+    // Filter out the current redundant landing page if needed
+    const filteredMonitors = monitors.filter(monitor => {
+        // Redundant check for adelfoscapital.onrender.com (the web itself)
+        return !monitor.friendly_name.toLowerCase().includes('adelfoscapital.onrender.com') &&
+               !(monitor.url || '').toLowerCase().includes('adelfoscapital.onrender.com');
+    });
 
-        // Simplify names
-        let displayName = monitor.friendly_name;
-        if (name.includes('adelfos-api')) displayName = 'API';
-        else if (name.includes('adelfos.onrender.com')) displayName = 'Terminal';
-
+    filteredMonitors.forEach(monitor => {
         const isUp = monitor.status === 2;
         if (!isUp) allUp = false;
 
@@ -130,44 +141,41 @@ function renderMonitors(monitors) {
         row.className = 'status-row';
         row.innerHTML = `
             <div class="service-meta">
-                <div class="service-name" title="${monitor.friendly_name}">${displayName}</div>
-                <div class="service-uptime">${Math.round(monitor.all_time_uptime_ratio)}%</div>
+                <div class="service-name">${getFriendlyName(monitor)}</div>
+                <div class="service-uptime">${monitor.all_time_uptime_ratio}%</div>
             </div>
             <div class="uptime-bars">
                 ${generateBars(isUp)}
             </div>
             <div class="service-status ${isUp ? 'is-up' : 'is-down'}">
                 <span class="status-dot-static"></span>
-                <span>${isUp ? 'Up' : 'Down'}</span>
+                <span>${isUp ? 'Online' : 'Interruption'}</span>
             </div>
         `;
         ELEMENTS.grid.appendChild(row);
     });
 
-    // Update overall status if elements exist (vibe check)
-    if (ELEMENTS.overallText && ELEMENTS.overallDot) {
-        if (allUp) {
-            ELEMENTS.overallText.innerText = 'Infrastructure Operational';
-            ELEMENTS.overallText.style.color = 'var(--pitch-white)';
-            ELEMENTS.overallDot.className = 'status-dot up';
-            ELEMENTS.overallDot.style.animation = 'none';
-            ELEMENTS.overallDot.style.background = 'var(--pitch-white)';
-        } else {
-            ELEMENTS.overallText.innerText = 'Service Degradation Detected';
-            ELEMENTS.overallText.style.color = 'var(--granate-red)';
-            ELEMENTS.overallDot.className = 'status-dot down';
-            ELEMENTS.overallDot.style.background = 'var(--granate-red)';
-        }
+    if (allUp) {
+        ELEMENTS.overallText.innerText = 'Infrastructure Stable';
+        ELEMENTS.overallText.style.color = '#fff';
+        ELEMENTS.overallDot.style.background = '#fff';
+        ELEMENTS.overallDot.style.boxShadow = '0 0 10px rgba(255,255,255,0.3)';
+        ELEMENTS.overallDot.className = 'status-dot';
+    } else {
+        ELEMENTS.overallText.innerText = 'Interruption Detected';
+        ELEMENTS.overallText.style.color = '#A01010';
+        ELEMENTS.overallDot.style.background = '#A01010';
+        ELEMENTS.overallDot.style.boxShadow = '0 0 10px rgba(160,16,16,0.3)';
+        ELEMENTS.overallDot.className = 'status-dot';
     }
 }
 
 function showError(msg) {
-    if (ELEMENTS.error) {
-        ELEMENTS.error.innerText = msg;
-        ELEMENTS.error.style.display = 'block';
-    }
-    if (ELEMENTS.overallText) ELEMENTS.overallText.innerText = 'Reality Sync Failed';
-    if (ELEMENTS.grid) ELEMENTS.grid.innerHTML = '';
+    ELEMENTS.error.innerText = msg;
+    ELEMENTS.error.style.display = 'block';
+    ELEMENTS.overallText.innerText = 'Handshake Failed';
+    ELEMENTS.overallDot.className = 'status-dot loading';
+    ELEMENTS.grid.innerHTML = '';
 }
 
 // Initializers
