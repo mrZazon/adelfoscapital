@@ -111,10 +111,17 @@ function renderMonitors(monitors) {
 
     monitors.forEach(monitor => {
         // Filter out the current website as it's redundant
-        if (monitor.friendly_name.toLowerCase().includes('adelfoscapital.onrender.com') || 
-            monitor.url?.toLowerCase().includes('adelfoscapital.onrender.com')) {
+        const name = monitor.friendly_name.toLowerCase();
+        const url = monitor.url?.toLowerCase() || '';
+        
+        if (name.includes('adelfoscapital.onrender.com') || url.includes('adelfoscapital.onrender.com')) {
             return;
         }
+
+        // Simplify names
+        let displayName = monitor.friendly_name;
+        if (name.includes('adelfos-api')) displayName = 'API';
+        else if (name.includes('adelfos.onrender.com')) displayName = 'Terminal';
 
         const isUp = monitor.status === 2;
         if (!isUp) allUp = false;
@@ -123,8 +130,8 @@ function renderMonitors(monitors) {
         row.className = 'status-row';
         row.innerHTML = `
             <div class="service-meta">
-                <div class="service-name" title="${monitor.friendly_name}">${monitor.friendly_name}</div>
-                <div class="service-uptime">${monitor.all_time_uptime_ratio}%</div>
+                <div class="service-name" title="${monitor.friendly_name}">${displayName}</div>
+                <div class="service-uptime">${Math.round(monitor.all_time_uptime_ratio)}%</div>
             </div>
             <div class="uptime-bars">
                 ${generateBars(isUp)}
@@ -137,23 +144,30 @@ function renderMonitors(monitors) {
         ELEMENTS.grid.appendChild(row);
     });
 
-    if (allUp) {
-        ELEMENTS.overallText.innerText = 'All systems operational.';
-        ELEMENTS.overallText.style.color = '#00ff88';
-        ELEMENTS.overallDot.className = 'status-dot up';
-    } else {
-        ELEMENTS.overallText.innerText = 'Infrastructure degradation detected.';
-        ELEMENTS.overallText.style.color = '#ff4444';
-        ELEMENTS.overallDot.className = 'status-dot down';
+    // Update overall status if elements exist (vibe check)
+    if (ELEMENTS.overallText && ELEMENTS.overallDot) {
+        if (allUp) {
+            ELEMENTS.overallText.innerText = 'Infrastructure Operational';
+            ELEMENTS.overallText.style.color = 'var(--pitch-white)';
+            ELEMENTS.overallDot.className = 'status-dot up';
+            ELEMENTS.overallDot.style.animation = 'none';
+            ELEMENTS.overallDot.style.background = 'var(--pitch-white)';
+        } else {
+            ELEMENTS.overallText.innerText = 'Service Degradation Detected';
+            ELEMENTS.overallText.style.color = 'var(--granate-red)';
+            ELEMENTS.overallDot.className = 'status-dot down';
+            ELEMENTS.overallDot.style.background = 'var(--granate-red)';
+        }
     }
 }
 
 function showError(msg) {
-    ELEMENTS.error.innerText = msg;
-    ELEMENTS.error.style.display = 'block';
-    ELEMENTS.overallText.innerText = 'Reality Sync Failed';
-    ELEMENTS.overallDot.className = 'status-dot loading';
-    ELEMENTS.grid.innerHTML = '';
+    if (ELEMENTS.error) {
+        ELEMENTS.error.innerText = msg;
+        ELEMENTS.error.style.display = 'block';
+    }
+    if (ELEMENTS.overallText) ELEMENTS.overallText.innerText = 'Reality Sync Failed';
+    if (ELEMENTS.grid) ELEMENTS.grid.innerHTML = '';
 }
 
 // Initializers

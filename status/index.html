@@ -15,16 +15,24 @@
         rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
     <style>
+        :root {
+            --pitch-white: #FFFFFF;
+            --granate-red: #A12D2D;
+            --na-gray: #222222;
+            --history-gray: #444444;
+        }
+
         body {
             overflow-y: auto;
             background-color: #000;
+            padding-bottom: 200px; /* Space for sticky footer */
         }
 
-        .status-container {
+        .status-header-main {
             max-width: 1000px;
-            margin: 10rem auto 6rem;
+            margin: 12rem auto 2rem;
             padding: 0 2rem;
-            width: 100%;
+            text-align: left;
         }
 
         .services-label {
@@ -40,49 +48,70 @@
             font-size: clamp(2.5rem, 6vw, 3.8rem);
             font-weight: 700;
             letter-spacing: -0.04em;
-            color: #FFFFFF;
+            color: var(--pitch-white);
             margin-bottom: 2rem;
         }
 
-        /* Fixed Countdown at Top */
-        .status-countdown-wrapper {
+        /* Dynamic Island Countdown (Floating Pill) */
+        .dynamic-island-wrapper {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 90px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(30px) saturate(150%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            pointer-events: none;
         }
 
-        /* Status Row Design */
-        .status-list {
+        #countdown.dynamic-island {
             display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-            margin-top: 3rem;
+            gap: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(25px) saturate(160%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 100px;
+            padding: 0.6rem 2.8rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
+            pointer-events: auto;
+        }
+
+        #countdown.dynamic-island .countdown-item span {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--pitch-white);
+            line-height: 1;
+        }
+
+        #countdown.dynamic-island .countdown-item label {
+            font-size: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #666;
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* Status List */
+        .status-list-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
 
         .status-row {
             background: rgba(255, 255, 255, 0.01);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 12px;
             padding: 1.5rem 2.2rem;
             display: flex;
             align-items: center;
             gap: 2.5rem;
+            margin-bottom: 1rem;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .status-row:hover {
-            background: rgba(255, 255, 255, 0.03);
             border-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.005);
+            background: rgba(255, 255, 255, 0.03);
         }
 
         .service-meta {
@@ -90,60 +119,61 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 1.5rem;
         }
 
         .service-name {
             font-weight: 600;
             font-size: 0.95rem;
-            color: #eee;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            color: #888;
             letter-spacing: -0.01em;
+            transition: color 0.3s ease;
+        }
+
+        .status-row:hover .service-name {
+            color: var(--pitch-white);
         }
 
         .service-uptime {
             font-size: 0.8rem;
-            color: #00ff88;
+            color: var(--pitch-white);
             font-family: 'Inter', monospace;
-            opacity: 0.9;
+            opacity: 0.5;
         }
 
-        /* Uptime Bars */
+        /* Activity Bars */
         .uptime-bars {
             flex: 1;
             display: flex;
             gap: 2px;
             align-items: center;
-            height: 30px;
+            height: 24px;
         }
 
         .uptime-bar {
             flex: 1;
-            height: 22px;
-            background: rgba(255, 255, 255, 0.05);
+            height: 18px;
+            background: var(--na-gray);
             border-radius: 1px;
             transition: all 0.3s ease;
         }
 
         .uptime-bar.up {
-            background: #222;
+            background: var(--history-gray);
         }
 
         .uptime-bar.recent.up {
-            background: #00ff88;
+            background: var(--pitch-white);
             opacity: 0.3;
         }
 
         .uptime-bar.recent:last-child {
-            background: #00ff88;
+            background: var(--pitch-white);
             opacity: 1;
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
 
         .uptime-bar.down {
-            background: #ff4444;
+            background: var(--granate-red);
         }
 
         .service-status {
@@ -152,15 +182,19 @@
             align-items: center;
             justify-content: flex-end;
             gap: 0.6rem;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 700;
             color: #444;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.1em;
         }
 
         .service-status.is-up {
-            color: #00ff88;
+            color: var(--pitch-white);
+        }
+
+        .service-status.is-down {
+            color: var(--granate-red);
         }
 
         .status-dot-static {
@@ -170,29 +204,96 @@
             background: currentColor;
         }
 
-        /* Grid Background for Footer */
-        .footer-cta {
-            position: relative;
-            overflow: hidden;
-            background: #000;
+        /* Sticky Bottom CTA Island */
+        .sticky-cta-wrapper {
+            position: fixed;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: auto;
+            min-width: 600px;
         }
 
-        .footer-cta::before {
+        .sticky-cta-island {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            padding: 1.2rem 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Background Grid for CTA Island */
+        .sticky-cta-island::before {
             content: '';
             position: absolute;
             inset: 0;
             background-image: 
                 linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
+            background-size: 30px 30px;
             background-position: center;
-            opacity: 0.5;
+            opacity: 0.8;
             mask-image: radial-gradient(circle at center, black, transparent 80%);
             -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
-            z-index: 0;
+            z-index: -1;
+        }
+
+        .cta-text h2 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.8rem;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--pitch-white);
+            line-height: 1;
+            margin-bottom: 0.2rem;
+        }
+
+        .cta-text p {
+            font-size: 0.75rem;
+            color: #666;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .waitlist-btn.premium {
+            background: var(--pitch-white);
+            color: #000;
+            padding: 0.8rem 2.2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .waitlist-btn.premium:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
         }
 
         @media (max-width: 900px) {
+            .sticky-cta-wrapper {
+                width: 90%;
+                min-width: unset;
+                bottom: 2rem;
+            }
+            .sticky-cta-island {
+                flex-direction: column;
+                gap: 1.5rem;
+                border-radius: 24px;
+                padding: 1.5rem;
+                text-align: center;
+            }
             .status-row {
                 flex-direction: column;
                 align-items: flex-start;
@@ -202,9 +303,6 @@
             .service-meta, .uptime-bars, .service-status {
                 flex: none;
                 width: 100%;
-            }
-            .service-status {
-                justify-content: flex-start;
             }
         }
     </style>
@@ -222,8 +320,8 @@
         </a>
     </header>
 
-    <div class="status-countdown-wrapper">
-        <div id="countdown" class="countdown scrolled" style="position: relative; top: 0; left: 0; transform: none; background: transparent; border: none; box-shadow: none; backdrop-filter: none;">
+    <div class="dynamic-island-wrapper">
+        <div id="countdown" class="dynamic-island">
             <div class="countdown-item"><span id="years">00</span><label>Years</label></div>
             <div class="countdown-item"><span id="months">00</span><label>Months</label></div>
             <div class="countdown-item"><span id="days">00</span><label>Days</label></div>
@@ -233,36 +331,28 @@
         </div>
     </div>
 
-    <main class="status-container">
-        <div class="status-header-main">
-            <span class="services-label">SYSTEM HEALTH</span>
-            <h1>Operations Status</h1>
-            
-            <div class="overall-status" id="overallStatusContainer" style="display: inline-flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1.8rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 50px; font-weight: 500; font-size: 0.9rem; margin-top: 1rem;">
-                <span class="status-dot loading" id="overallStatusDot"></span>
-                <span id="overallStatusText" style="letter-spacing: 0.05em; color: #888;">Synchronizing reality...</span>
-            </div>
-            <div id="errorMessage" class="error-message" style="color: #ff4444; background: rgba(255, 68, 68, 0.05); padding: 1rem; border-radius: 8px; margin-top: 2rem; display: none; font-size: 0.85rem; border: 1px solid rgba(255, 68, 68, 0.1);"></div>
-        </div>
-
-        <div class="status-list" id="monitorsGrid">
-            <!-- Monitors will be injected here -->
-            <div class="status-row" style="opacity: 0.3;">
-                <div class="service-meta">
-                    <div class="service-name">Loading nodes...</div>
-                </div>
-            </div>
-        </div>
+    <main class="status-header-main">
+        <span class="services-label">SYSTEM HEALTH</span>
+        <h1>Operations Status</h1>
+        
+            <div id="errorMessage" class="error-message" style="color: var(--granate-red); background: rgba(161, 45, 45, 0.05); padding: 1rem; border-radius: 8px; margin-top: 2rem; display: none; font-size: 0.85rem; border: 1px solid rgba(161, 45, 45, 0.1);"></div>
     </main>
 
-    <!-- Footer CTA Section -->
-    <section class="footer-cta" id="footerCTA" style="margin-top: 5rem; border-top: 1px solid rgba(255, 255, 255, 0.05);">
-        <h2 style="font-family: 'Crimson Pro', serif; font-style: italic; font-weight: 300;">The calculation is running.</h2>
-        <p>Only fifty alpha terminal keys will be minted before the global v1.0 release.</p>
-        <a href="/#heroSection" class="waitlist-btn large" style="text-decoration: none;">
-            <span>SECURE YOUR TERMINAL</span>
-        </a>
-    </header>
+    <div class="status-list-container" id="monitorsGrid">
+        <!-- Monitors will be injected here -->
+    </div>
+
+    <div class="sticky-cta-wrapper">
+        <div class="sticky-cta-island">
+            <div class="cta-text">
+                <h2>The calculation is running.</h2>
+                <p>Limited phase 1 terminal keys remain</p>
+            </div>
+            <a href="/#heroSection" class="waitlist-btn premium">
+                SECURE ACCESS
+            </a>
+        </div>
+    </div>
 
     <script type="module" src="status.js"></script>
 </body>
