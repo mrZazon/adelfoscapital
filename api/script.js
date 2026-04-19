@@ -14,7 +14,12 @@ if (!firebase.apps.length) {
 }
 
 const auth = firebase.auth();
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+let apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+// Remove trailing slash if exists
+if (apiBase.endsWith('/')) apiBase = apiBase.slice(0, -1);
+const API_BASE_URL = apiBase;
+
+console.log('[ADELFOS] API Base URL:', API_BASE_URL);
 
 // State
 let isLoading = false;
@@ -88,7 +93,10 @@ generateBtn.addEventListener('click', async () => {
 
     try {
         const idToken = await user.getIdToken();
-        const response = await fetch(`${API_BASE_URL}/v1/keys/generate`, {
+        const targetUrl = `${API_BASE_URL}/v1/keys/generate`;
+        console.log('[ADELFOS] Fetching:', targetUrl);
+
+        const response = await fetch(targetUrl, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${idToken}`,
@@ -102,7 +110,12 @@ generateBtn.addEventListener('click', async () => {
             data = await response.json();
         } else {
             const rawBody = await response.text();
-            console.error('Non-JSON response:', rawBody);
+            console.error('Non-JSON response details:', {
+                status: response.status,
+                contentType: contentType,
+                body: rawBody.substring(0, 200)
+            });
+            throw new Error(`Server returned non-JSON response (${response.status})`);
         }
 
         if (response.ok) {
