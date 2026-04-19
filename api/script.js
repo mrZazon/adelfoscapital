@@ -92,7 +92,7 @@ generateBtn.addEventListener('click', async () => {
     try {
         const idToken = await user.getIdToken();
         const targetUrl = `${API_BASE_URL}/v1/keys/generate`;
-
+        
         const response = await fetch(targetUrl, {
             method: 'POST',
             headers: {
@@ -148,9 +148,16 @@ copyBtn.addEventListener('click', () => {
         else alert('No se pudo copiar. Selecciona y copia manualmente.');
     };
 
+    console.log('[COPY] isSecureContext:', window.isSecureContext);
+    console.log('[COPY] clipboard available:', !!navigator.clipboard);
+    console.log('[COPY] key length:', key.length);
+
     if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(key).then(showSuccess).catch(fallbackCopy);
+        navigator.clipboard.writeText(key)
+            .then(() => { console.log('[COPY] clipboard API success'); showSuccess(); })
+            .catch(err => { console.error('[COPY] clipboard API failed:', err.name, err.message); fallbackCopy(); });
     } else {
+        console.warn('[COPY] using fallback (no clipboard API or not secure)');
         fallbackCopy();
     }
 });
