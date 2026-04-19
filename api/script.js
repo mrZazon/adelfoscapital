@@ -23,6 +23,7 @@ console.log('[ADELFOS] API Base URL:', API_BASE_URL);
 // DOM Elements
 const loginContainer = document.getElementById('login-container');
 const dashboardContainer = document.getElementById('dashboard-container');
+const userStatus = document.getElementById('user-status');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const loginBtn = document.getElementById('login-btn');
@@ -38,11 +39,13 @@ auth.onAuthStateChanged(user => {
     if (user) {
         loginContainer.classList.add('hidden');
         dashboardContainer.classList.remove('hidden');
+        userStatus.classList.remove('hidden');
         userEmailDisplay.innerText = user.email;
         document.body.classList.remove('login-active');
     } else {
         loginContainer.classList.remove('hidden');
         dashboardContainer.classList.add('hidden');
+        userStatus.classList.add('hidden');
         document.body.classList.add('login-active');
     }
 });
