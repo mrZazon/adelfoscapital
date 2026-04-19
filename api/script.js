@@ -15,71 +15,65 @@ if (!firebase.apps.length) {
 
 const auth = firebase.auth();
 let apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
-// Remove trailing slash if exists
 if (apiBase.endsWith('/')) apiBase = apiBase.slice(0, -1);
 const API_BASE_URL = apiBase;
 
 console.log('[ADELFOS] API Base URL:', API_BASE_URL);
 
-// State
-let isLoading = false;
-
 // DOM Elements
-const authView = document.getElementById('authView');
-const dashboardView = document.getElementById('dashboardView');
-const authForm = document.getElementById('authForm');
+const loginContainer = document.getElementById('login-container');
+const dashboardContainer = document.getElementById('dashboard-container');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
-const authBtnText = document.getElementById('authBtnText');
-const authLoader = document.getElementById('authLoader');
-const authError = document.getElementById('authError');
-const userEmailDisplay = document.getElementById('userEmail');
-const logoutBtn = document.getElementById('logoutBtn');
-const apiKeyDisplay = document.getElementById('apiKeyDisplay');
-const generateBtn = document.getElementById('generateBtn');
-const copyBtn = document.getElementById('copyBtn');
-const keyWarning = document.getElementById('keyWarning');
+const loginBtn = document.getElementById('login-btn');
+const loginError = document.getElementById('login-error');
+const userEmailDisplay = document.getElementById('user-email-display');
+const logoutBtn = document.getElementById('logout-btn');
+const apiKeyDisplay = document.getElementById('api-key-display');
+const generateBtn = document.getElementById('generate-btn');
+const copyBtn = document.getElementById('copy-btn');
 
 // Auth State Listener
 auth.onAuthStateChanged(user => {
     if (user) {
-        showView('dashboard');
+        loginContainer.classList.add('hidden');
+        dashboardContainer.classList.remove('hidden');
         userEmailDisplay.innerText = user.email;
+        document.body.classList.remove('login-active');
     } else {
-        showView('auth');
+        loginContainer.classList.remove('hidden');
+        dashboardContainer.classList.add('hidden');
+        document.body.classList.add('login-active');
     }
 });
 
-function showView(viewName) {
-    authView.classList.toggle('visible', viewName === 'auth');
-    dashboardView.classList.toggle('visible', viewName === 'dashboard');
-}
-
-// Handle Auth
-authForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+// Login
+loginBtn.addEventListener('click', async () => {
     const email = emailInput.value;
     const password = passwordInput.value;
 
-    authBtnText.style.display = 'none';
-    authLoader.style.display = 'block';
-    authError.innerText = '';
+    if (!email || !password) return;
+
+    loginBtn.disabled = true;
+    const btnSpan = loginBtn.querySelector('span');
+    const originalText = btnSpan.innerText;
+    btnSpan.innerText = 'AUTHENTICATING...';
+    loginError.innerText = '';
 
     try {
         await auth.signInWithEmailAndPassword(email, password);
     } catch (error) {
-        authError.innerText = error.message;
+        loginError.innerText = error.message;
     } finally {
-        authBtnText.style.display = 'block';
-        authLoader.style.display = 'none';
+        btnSpan.innerText = originalText;
+        loginBtn.disabled = false;
     }
 });
 
 // Logout
 logoutBtn.addEventListener('click', () => {
     auth.signOut();
-    apiKeyDisplay.innerText = '••••••••••••••••••••••••••••';
-    keyWarning.style.display = 'none';
+    apiKeyDisplay.innerText = '•••• •••• •••• ••••';
 });
 
 // Generate API Key
@@ -87,15 +81,15 @@ generateBtn.addEventListener('click', async () => {
     const user = auth.currentUser;
     if (!user) return;
 
-    const originalText = generateBtn.innerText;
-    generateBtn.innerText = 'GENERATING...';
+    const btnSpan = generateBtn.querySelector('span');
+    const originalText = btnSpan.innerText;
+    btnSpan.innerText = 'GENERATING SECURE KEY...';
     generateBtn.disabled = true;
 
     try {
         const idToken = await user.getIdToken();
         const targetUrl = `${API_BASE_URL}/v1/keys/generate`;
-        console.log('[ADELFOS] Fetching:', targetUrl);
-
+        
         const response = await fetch(targetUrl, {
             method: 'POST',
             headers: {
@@ -104,32 +98,18 @@ generateBtn.addEventListener('click', async () => {
             }
         });
 
-        const contentType = response.headers.get("content-type");
-        let data = {};
-        if (contentType && contentType.includes("application/json")) {
-            data = await response.json();
-        } else {
-            const rawBody = await response.text();
-            console.error('Non-JSON response details:', {
-                status: response.status,
-                contentType: contentType,
-                body: rawBody.substring(0, 200)
-            });
-            throw new Error(`Server returned non-JSON response (${response.status})`);
-        }
+        const data = await response.json();
 
         if (response.ok) {
             apiKeyDisplay.innerText = data.api_key;
-            keyWarning.style.display = 'block';
-            document.getElementById('rateLimit').innerText = `${data.rate_limit}/hr`;
         } else {
-            alert(data.detail || 'Failed to generate key. Check console for details.');
+            alert(data.detail || 'Failed to generate key.');
         }
     } catch (error) {
         console.error('Generation Error:', error);
-        alert('Network error while generating key.');
+        alert('Network error. Ensure the API server is running.');
     } finally {
-        generateBtn.innerText = originalText;
+        btnSpan.innerText = originalText;
         generateBtn.disabled = false;
     }
 });
@@ -141,9 +121,30 @@ copyBtn.addEventListener('click', () => {
 
     navigator.clipboard.writeText(key).then(() => {
         const originalSvg = copyBtn.innerHTML;
-        copyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#44ff44" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+        copyBtn.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18"><path fill="#00ff88" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`;
         setTimeout(() => {
             copyBtn.innerHTML = originalSvg;
         }, 2000);
     });
 });
+
+// Particles Background
+if (window.particlesJS) {
+    particlesJS("particles-js", {
+        "particles": {
+            "number": { "value": 40, "density": { "enable": true, "value_area": 800 } },
+            "color": { "value": "#ffffff" },
+            "shape": { "type": "circle" },
+            "opacity": { "value": 0.1, "random": false },
+            "size": { "value": 1, "random": true },
+            "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.05, "width": 1 },
+            "move": { "enable": true, "speed": 1, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false } },
+            "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.1 } } }
+        },
+        "retina_detect": true
+    });
+}
