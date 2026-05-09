@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElCafé Capital | API Docs</title>
+    <link rel="icon" href="/brand/logo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Manuale:wght@300;400;500;600;700&family=JetBrains+Mono&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../api/style.css">
+    <style>
+        .docs-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: var(--card-bg);
+            border: 0.5px solid var(--card-border);
+            border-radius: var(--radius-card);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+        }
+        .docs-header {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 1rem;
+        }
+        .docs-content h3 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        .docs-content p {
+            margin-bottom: 1rem;
+        }
+        .docs-content pre {
+            background: rgba(66, 66, 66, 0.03);
+            border: 1px solid var(--card-border);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+        }
+        .docs-content code {
+            color: var(--primary);
+        }
+        .endpoint-pill {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar">
+        <a href="/" class="logo">
+            <img src="/brand/logo.png" alt="ElCafé" class="logo-icon">
+            <div class="logo-text">
+                <span class="bold">ElCafé</span><span class="thin">Capital</span>
+            </div>
+        </a>
+        <div class="user-pill">
+            <a href="/api/" style="text-decoration: none; color: inherit; font-weight: 600;">API Portal</a>
+        </div>
+    </header>
+
+    <main class="viewport">
+        <div class="docs-container">
+            <div class="docs-header">
+                <span class="tag">DOCUMENTATION</span>
+                <h1>API Reference</h1>
+                <p>Integrate ElCafé Capital data into your own applications.</p>
+            </div>
+            
+            <div class="docs-content">
+                <h3>Authentication</h3>
+                <p>All API requests (except health check) require an API key to be sent in the <code>Authorization: Bearer YOUR_API_KEY</code> header. You can generate your key in the <a href="/api/" style="color: var(--accent);">API Portal</a>.</p>
+                <pre><code>curl -H "Authorization: Bearer YOUR_API_KEY" https://api.elcafecapital.com/v1/...</code></pre>
+                
+                <h3>Simulation Endpoints</h3>
+                <div style="margin-bottom: 2rem;">
+                    <p><span class="endpoint-pill">POST</span> <code>/v1/simulate</code></p>
+                    <p>Run a standard Monte Carlo simulation using Hermes or Kronos engines.</p>
+                    <p><strong>Request Body (SimulateRequest):</strong></p>
+                    <pre><code>{
+  "ticker": "string",
+  "n_sim": "integer [1000, 5000000]",
+  "sim_days": "integer [1, 252]",
+  "min_window": "integer [2, 252]",
+  "engine": "string ^(auto|hermes|kronos)$",
+  "seed": "integer (optional)"
+}</code></pre>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <p><span class="endpoint-pill">POST</span> <code>/v1/simulate/afrodita</code></p>
+                    <p>Run a specialized Afrodita stochastic volatility simulation.</p>
+                    <p><strong>Request Body (AfroditaRequest):</strong></p>
+                    <pre><code>{
+  "ticker": "string",
+  "n_paths": "integer [100, 100000]",
+  "window": "integer [1, 60]",
+  "seed": "integer (optional)",
+  "use_hermes_closes": "boolean (optional)",
+  "n_hermes": "integer (optional)"
+}</code></pre>
+                </div>
+
+                <h3>System Endpoints</h3>
+                
+                <div style="margin-bottom: 2rem;">
+                    <p><span class="endpoint-pill" style="background: #2196F3;">GET</span> <code>/v1/health</code></p>
+                    <p>Check API health status (No authentication required).</p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <p><span class="endpoint-pill" style="background: #2196F3;">GET</span> <code>/v1/calibrate</code></p>
+                    <p>Calibrate system models.</p>
+                </div>
+                
+                <h3>Rate Limits</h3>
+                <p>The standard institutional tier is limited to <strong>60 requests per hour</strong>. Contact support for enterprise limits.</p>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

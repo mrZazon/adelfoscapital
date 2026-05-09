@@ -8,6 +8,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         status: resolve(__dirname, 'status/index.html'),
         api: resolve(__dirname, 'api/index.html'),
+        docs: resolve(__dirname, 'docs/index.html'),
       },
     },
   },

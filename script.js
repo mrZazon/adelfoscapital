@@ -47,9 +47,9 @@ function updateCountdown() {
 }
 
 function setupCalendarButtons() {
-    const title = 'Adelfos Capital Terminal Launch';
-    const description = 'Official launch of the Adelfos Financial Terminal. Join us for the next generation of financial simulation.';
-    const location = 'adelfos.app';
+    const title = 'ElCaf\u00e9 Capital Terminal Launch';
+    const description = 'Official launch of the ElCaf\u00e9 Capital Terminal. Join us for the next generation of financial simulation.';
+    const location = 'elcafecapital.com';
     const startDate = '20281011T150000Z';
     const endDate = '20281011T170000Z'; // 2 hours event
 
@@ -251,7 +251,7 @@ function setupScrollEffects() {
 
             if (engine === 'hermes') {
                 this.ctx.lineWidth = 1.5;
-                this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+                this.ctx.strokeStyle = 'rgba(66, 66, 66, 0.25)';
                 parts.forEach(p => {
                     const last = p.points[p.points.length - 1];
                     const next = {
@@ -275,7 +275,7 @@ function setupScrollEffects() {
             if (engine === 'kronos') {
                 const centerX = this.canvas.width * 0.5;
                 const centerY = this.canvas.height * 0.5;
-                this.ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                this.ctx.fillStyle = 'rgba(66, 66, 66, 0.3)';
                 parts.forEach(p => {
                     p.angle += p.speed;
                     const x = centerX + Math.cos(p.angle) * p.radius;
@@ -287,8 +287,8 @@ function setupScrollEffects() {
             }
 
             if (engine === 'afrodita') {
-                this.ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-                this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+                this.ctx.fillStyle = 'rgba(66, 66, 66, 0.3)';
+                this.ctx.strokeStyle = 'rgba(66, 66, 66, 0.06)';
                 parts.forEach((p, i) => {
                     p.x += p.vx; p.y += p.vy;
                     if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
@@ -311,7 +311,7 @@ function setupScrollEffects() {
 
             if (engine === 'tartaros' && state.meta) {
                 this.ctx.lineWidth = 1;
-                this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+                this.ctx.strokeStyle = 'rgba(66, 66, 66, 0.15)';
                 parts.forEach(p => {
                     const noise = Math.sin(p.ox * 0.01 + this.time * 0.5) * 20;
                     const stress = (Math.random() > 0.99) ? -80 : 0;
@@ -616,8 +616,8 @@ class FeatureAnimations {
         const w = canvas.width;
         const h = canvas.height;
         ctx.clearRect(0, 0, w, h);
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        ctx.strokeStyle = 'rgba(66, 66, 66, 0.5)';
+        ctx.fillStyle = 'rgba(66, 66, 66, 0.4)';
         ctx.lineWidth = 1;
 
         switch (type) {
