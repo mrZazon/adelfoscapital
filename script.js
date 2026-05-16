@@ -34,7 +34,7 @@ function updateCountdown() {
     }
 
     if (new Date() >= targetDate) {
-        document.getElementById('countdown').innerHTML = "TERMINAL EN VIVO";
+        document.getElementById('countdown').innerHTML = "TERMINAL LIVE";
         return;
     }
 
@@ -47,8 +47,8 @@ function updateCountdown() {
 }
 
 function setupCalendarButtons() {
-    const title = 'Lanzamiento de Terminal ElCaf\u00e9 Capital';
-    const description = 'Lanzamiento oficial de la Terminal ElCaf\u00e9 Capital. Únase a nosotros para la próxima generación de simulación financiera.';
+    const title = 'ElCaf\u00e9 Capital Terminal Launch';
+    const description = 'Official launch of the ElCaf\u00e9 Capital Terminal. Join us for the next generation of financial simulation.';
     const location = 'elcafecapital.com';
     const startDate = '20281011T150000Z';
     const endDate = '20281011T170000Z'; // 2 hours event
@@ -469,7 +469,7 @@ function setupScrollEffects() {
                         // Force a tiny delay so the browser paints the initial small textarea frame before expanding
                         setTimeout(() => {
                             waitlistForm.classList.add('expanded-pill');
-                            btnSpan.innerText = "ENVIAR SOLICITUD";
+                            btnSpan.innerText = "SUBMIT APPLICATION";
                             waitlistReason.style.opacity = '1';
                             waitlistSubmitBtn.style.opacity = '1';
                             waitlistSubmitBtn.style.pointerEvents = "auto";
@@ -481,7 +481,7 @@ function setupScrollEffects() {
             } else if (currentStep === 2) {
                 if (waitlistReason && waitlistReason.value) {
                     const originalText = btnSpan.innerText;
-                    btnSpan.innerText = "PROCESANDO...";
+                    btnSpan.innerText = "PROCESSING...";
                     waitlistSubmitBtn.style.pointerEvents = "none";
                     waitlistSubmitBtn.style.opacity = "0.7";
                     
@@ -493,18 +493,18 @@ function setupScrollEffects() {
                             source: 'landing_page'
                         });
 
-                        btnSpan.innerText = "ACCESO ASEGURADO";
+                        btnSpan.innerText = "ACCESS SECURED";
                         waitlistSubmitBtn.style.opacity = "1";
                         waitlistSubmitBtn.classList.add('success');
 
                         const hintDiv = document.querySelector('.waitlist-hint');
                         if (hintDiv) {
-                            hintDiv.innerHTML = "Solicitud recibida de forma segura. Será notificado por correo electrónico.";
+                            hintDiv.innerHTML = "Application received securely. You will be notified via email.";
                             hintDiv.style.color = "#cccccc";
                         }
                     } catch (error) {
                         console.error("Firebase Error:", error);
-                        btnSpan.innerText = "ERROR - INTENTE DE NUEVO";
+                        btnSpan.innerText = "ERROR - TRY AGAIN";
                         waitlistSubmitBtn.style.pointerEvents = "auto";
                         waitlistSubmitBtn.style.opacity = "1";
                         

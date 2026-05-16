@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ElCafé Capital | Docs de API</title>
+    <title>ElCafé Capital | API Docs</title>
     <link rel="icon" href="/brand/logo.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -71,66 +71,66 @@
             </div>
         </a>
         <div class="user-pill">
-            <a href="/api/" style="text-decoration: none; color: inherit; font-weight: 600;">Portal API</a>
+            <a href="/api/" style="text-decoration: none; color: inherit; font-weight: 600;">API Portal</a>
         </div>
     </header>
 
     <main class="viewport">
         <div class="docs-container">
             <div class="docs-header">
-                <span class="tag">DOCUMENTACIÓN</span>
-                <h1>Referencia API</h1>
-                <p>Integre los datos de ElCafé Capital en sus propias aplicaciones.</p>
+                <span class="tag">DOCUMENTATION</span>
+                <h1>API Reference</h1>
+                <p>Integrate ElCafé Capital data into your own applications.</p>
             </div>
             
             <div class="docs-content">
-                <h3>Autenticación</h3>
-                <p>Todas las solicitudes a la API (excepto la verificación de estado) requieren que se envíe una clave API en la cabecera <code>Authorization: Bearer YOUR_API_KEY</code>. Puede generar su clave en el <a href="/api/" style="color: var(--accent);">Portal API</a>.</p>
+                <h3>Authentication</h3>
+                <p>All API requests (except health check) require an API key to be sent in the <code>Authorization: Bearer YOUR_API_KEY</code> header. You can generate your key in the <a href="/api/" style="color: var(--accent);">API Portal</a>.</p>
                 <pre><code>curl -H "Authorization: Bearer YOUR_API_KEY" https://api.elcafecapital.com/v1/...</code></pre>
                 
-                <h3>Endpoints de Simulación</h3>
+                <h3>Simulation Endpoints</h3>
                 <div style="margin-bottom: 2rem;">
                     <p><span class="endpoint-pill">POST</span> <code>/v1/simulate</code></p>
-                    <p>Ejecute una simulación de Monte Carlo estándar utilizando los motores Hermes o Kronos.</p>
-                    <p><strong>Cuerpo de la Solicitud (SimulateRequest):</strong></p>
+                    <p>Run a standard Monte Carlo simulation using Hermes or Kronos engines.</p>
+                    <p><strong>Request Body (SimulateRequest):</strong></p>
                     <pre><code>{
-  "ticker": "cadena",
-  "n_sim": "entero [1000, 5000000]",
-  "sim_days": "entero [1, 252]",
-  "min_window": "entero [2, 252]",
-  "engine": "cadena ^(auto|hermes|kronos)$",
-  "seed": "entero (opcional)"
+  "ticker": "string",
+  "n_sim": "integer [1000, 5000000]",
+  "sim_days": "integer [1, 252]",
+  "min_window": "integer [2, 252]",
+  "engine": "string ^(auto|hermes|kronos)$",
+  "seed": "integer (optional)"
 }</code></pre>
                 </div>
                 
                 <div style="margin-bottom: 2rem;">
                     <p><span class="endpoint-pill">POST</span> <code>/v1/simulate/afrodita</code></p>
-                    <p>Ejecute una simulación especializada de volatilidad estocástica de Afrodita.</p>
-                    <p><strong>Cuerpo de la Solicitud (AfroditaRequest):</strong></p>
+                    <p>Run a specialized Afrodita stochastic volatility simulation.</p>
+                    <p><strong>Request Body (AfroditaRequest):</strong></p>
                     <pre><code>{
-  "ticker": "cadena",
-  "n_paths": "entero [100, 100000]",
-  "window": "entero [1, 60]",
-  "seed": "entero (opcional)",
-  "use_hermes_closes": "booleano (opcional)",
-  "n_hermes": "entero (opcional)"
+  "ticker": "string",
+  "n_paths": "integer [100, 100000]",
+  "window": "integer [1, 60]",
+  "seed": "integer (optional)",
+  "use_hermes_closes": "boolean (optional)",
+  "n_hermes": "integer (optional)"
 }</code></pre>
                 </div>
 
-                <h3>Endpoints del Sistema</h3>
+                <h3>System Endpoints</h3>
                 
                 <div style="margin-bottom: 2rem;">
                     <p><span class="endpoint-pill" style="background: #2196F3;">GET</span> <code>/v1/health</code></p>
-                    <p>Compruebe el estado de salud de la API (No requiere autenticación).</p>
+                    <p>Check API health status (No authentication required).</p>
                 </div>
 
                 <div style="margin-bottom: 2rem;">
                     <p><span class="endpoint-pill" style="background: #2196F3;">GET</span> <code>/v1/calibrate</code></p>
-                    <p>Calibrar modelos del sistema.</p>
+                    <p>Calibrate system models.</p>
                 </div>
                 
-                <h3>Límites de Tarifa</h3>
-                <p>El nivel institucional estándar está limitado a <strong>60 solicitudes por hora</strong>. Contacte con soporte para límites empresariales.</p>
+                <h3>Rate Limits</h3>
+                <p>The standard institutional tier is limited to <strong>60 requests per hour</strong>. Contact support for enterprise limits.</p>
             </div>
         </div>
     </main>
