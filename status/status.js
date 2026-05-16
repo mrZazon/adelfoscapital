@@ -42,7 +42,7 @@ function updateCountdown() {
 
     if (new Date() >= targetDate) {
         const island = document.querySelector('.dynamic-island-countdown');
-        if (island) island.innerHTML = "TERMINAL LIVE";
+        if (island) island.innerHTML = "TERMINAL EN VIVO";
         return;
     }
 
@@ -64,7 +64,7 @@ function updateCountdown() {
  */
 async function fetchStatus() {
     if (!CONFIG.API_KEY || CONFIG.API_KEY.startsWith('YOUR_')) {
-        showError('CONFIGURATION PENDING: Please set VITE_UPTIMEROBOT_API_KEY in environment.');
+        showError('CONFIGURACIÓN PENDIENTE: Por favor, establezca VITE_UPTIMEROBOT_API_KEY en el entorno.');
         return;
     }
 
@@ -82,7 +82,7 @@ async function fetchStatus() {
         renderMonitors(data.monitors);
     } catch (err) {
         console.error('Fetch error:', err);
-        showError(`INFRASTRUCTURE SYNC FAILED: ${err.message}`);
+        showError(`ERROR DE SINCRONIZACIÓN DE INFRAESTRUCTURA: ${err.message}`);
     }
 }
 
@@ -149,20 +149,20 @@ function renderMonitors(monitors) {
             </div>
             <div class="service-status ${isUp ? 'is-up' : 'is-down'}">
                 <span class="status-dot-static"></span>
-                <span>${isUp ? 'Online' : 'Interruption'}</span>
+                <span>${isUp ? 'En línea' : 'Interrupción'}</span>
             </div>
         `;
         ELEMENTS.grid.appendChild(row);
     });
 
     if (allUp) {
-        ELEMENTS.overallText.innerText = 'Infrastructure Stable';
-        ELEMENTS.overallText.style.color = '#fff';
-        ELEMENTS.overallDot.style.background = '#fff';
-        ELEMENTS.overallDot.style.boxShadow = '0 0 10px rgba(255,255,255,0.3)';
+        ELEMENTS.overallText.innerText = 'Infraestructura Estable';
+        ELEMENTS.overallText.style.color = 'var(--primary)';
+        ELEMENTS.overallDot.style.background = 'var(--primary)';
+        ELEMENTS.overallDot.style.boxShadow = '0 0 10px rgba(66,66,66,0.2)';
         ELEMENTS.overallDot.className = 'status-dot';
     } else {
-        ELEMENTS.overallText.innerText = 'Interruption Detected';
+        ELEMENTS.overallText.innerText = 'Interrupción Detectada';
         ELEMENTS.overallText.style.color = '#A01010';
         ELEMENTS.overallDot.style.background = '#A01010';
         ELEMENTS.overallDot.style.boxShadow = '0 0 10px rgba(160,16,16,0.3)';
@@ -173,7 +173,7 @@ function renderMonitors(monitors) {
 function showError(msg) {
     ELEMENTS.error.innerText = msg;
     ELEMENTS.error.style.display = 'block';
-    ELEMENTS.overallText.innerText = 'Handshake Failed';
+    ELEMENTS.overallText.innerText = 'Fallo de Conexión';
     ELEMENTS.overallDot.className = 'status-dot loading';
     ELEMENTS.grid.innerHTML = '';
 }

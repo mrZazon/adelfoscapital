@@ -74,7 +74,7 @@ loginBtn.addEventListener('click', async () => {
     loginBtn.disabled = true;
     const btnSpan = loginBtn.querySelector('span');
     const original = btnSpan.innerText;
-    btnSpan.innerText = 'AUTHENTICATING...';
+    btnSpan.innerText = 'AUTENTICANDO...';
     loginError.innerText = '';
 
     try {
@@ -177,7 +177,7 @@ generateBtn.addEventListener('click', async () => {
 
     const btnSpan = generateBtn.querySelector('span');
     const original = btnSpan.innerText;
-    btnSpan.innerText = 'GENERATING SECURE KEY...';
+    btnSpan.innerText = 'GENERANDO CLAVE SEGURA...';
     generateBtn.disabled = true;
 
     try {
@@ -195,11 +195,11 @@ generateBtn.addEventListener('click', async () => {
         if (response.ok) {
             revealKey(data.api_key);
         } else {
-            alert(data.detail || 'Failed to generate key.');
+            alert(data.detail || 'Error al generar la clave.');
         }
     } catch (err) {
         console.error('Generation Error:', err);
-        alert('Network error. Ensure the API server is running.');
+        alert('Error de red. Asegúrese de que el servidor API esté ejecutándose.');
     } finally {
         btnSpan.innerText = original;
         generateBtn.disabled = false;
@@ -216,7 +216,7 @@ if (deleteBtn) {
         deleteBtn.disabled = true;
         const btnSpan = deleteBtn.querySelector('span');
         const original = btnSpan.innerText;
-        btnSpan.innerText = 'REVOKING...';
+        btnSpan.innerText = 'REVOCANDO...';
 
         try {
             const idToken = await user.getIdToken();
@@ -229,11 +229,11 @@ if (deleteBtn) {
                 maskKey();
             } else {
                 const data = await response.json();
-                alert(data.detail || 'Failed to revoke key.');
+                alert(data.detail || 'Error al revocar la clave.');
             }
         } catch (err) {
             console.error('Revoke Error:', err);
-            alert('Network error. Ensure the API server is running.');
+            alert('Error de red. Asegúrese de que el servidor API esté ejecutándose.');
         } finally {
             btnSpan.innerText = original;
             deleteBtn.disabled = false;

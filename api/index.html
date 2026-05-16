@@ -27,7 +27,7 @@
         <div id="user-status" class="hidden">
             <div class="user-pill">
                 <span id="user-email-display"></span>
-                <button id="logout-btn">Logout</button>
+                <button id="logout-btn">Cerrar Sesión</button>
             </div>
         </div>
     </header>
@@ -37,16 +37,16 @@
         <div id="login-container" class="auth-wrapper">
             <div class="bento-card auth-card">
                 <div class="card-header">
-                    <span class="tag">SECURE ACCESS</span>
-                    <h1>Terminal Login</h1>
-                    <p>Enter institutional credentials</p>
+                    <span class="tag">ACCESO SEGURO</span>
+                    <h1>Inicio de Sesión Terminal</h1>
+                    <p>Ingrese credenciales institucionales</p>
                 </div>
 
                 <div class="login-form">
-                    <input type="email" id="email" placeholder="Email address" required>
-                    <input type="password" id="password" placeholder="Password" required>
+                    <input type="email" id="email" placeholder="Dirección de correo" required>
+                    <input type="password" id="password" placeholder="Contraseña" required>
                     <button id="login-btn" class="pill-btn primary">
-                        <span>Authenticate</span>
+                        <span>Autenticar</span>
                         <svg viewBox="0 0 24 24" width="16" height="16">
                             <path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" />
                         </svg>
@@ -61,8 +61,8 @@
             <!-- Main Key Card -->
             <div class="bento-card key-card">
                 <div class="card-header">
-                    <span class="tag">API ACCESS</span>
-                    <h2>Simulation Key</h2>
+                    <span class="tag">ACCESO API</span>
+                    <h2>Clave de Simulación</h2>
                 </div>
                 <div class="key-display-pill">
                     <code id="api-key-display">•••• •••• •••• ••••</code>
@@ -75,37 +75,37 @@
                 </div>
                 <div class="card-footer">
                     <button id="generate-btn" class="pill-btn secondary">
-                        <span>Regenerate Key</span>
+                        <span>Regenerar Clave</span>
                     </button>
                     <button id="delete-btn" class="pill-btn danger">
                         <svg viewBox="0 0 24 24" width="16" height="16">
                             <path fill="currentColor"
                                 d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
                         </svg>
-                        <span>Revoke Key</span>
+                        <span>Revocar Clave</span>
                     </button>
-                    <p class="hint">One active key per account.</p>
+                    <p class="hint">Una clave activa por cuenta.</p>
                 </div>
             </div>
 
             <!-- Stats & Info -->
             <div class="bento-card stat-card">
-                <span class="tag">LIMIT</span>
-                <div class="big-stat">60<small>req/hr</small></div>
+                <span class="tag">LÍMITE</span>
+                <div class="big-stat">60<small>req/h</small></div>
             </div>
 
             <div class="bento-card stat-card">
-                <span class="tag">STATUS</span>
+                <span class="tag">ESTADO</span>
                 <div class="status-pill active">
                     <span class="dot"></span>
-                    Operational
+                    Operativo
                 </div>
             </div>
 
             <div class="bento-card help-card">
-                <span class="tag">DOCUMENTATION</span>
-                <p>Use <code>X-API-Key</code> header for all requests.</p>
-                <a href="/docs" class="text-link">View API Docs →</a>
+                <span class="tag">DOCUMENTACIÓN</span>
+                <p>Use la cabecera <code>X-API-Key</code> para todas las solicitudes.</p>
+                <a href="/docs" class="text-link">Ver Docs de API →</a>
             </div>
         </div>
     </main>
